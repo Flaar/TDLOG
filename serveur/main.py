@@ -19,7 +19,16 @@ class traitementRequete(socketserver.StreamRequestHandler):
         #self.rfile est un fichier contenant le contenu de la requete
         clientId=int(self.rfile.readline().strip())
         requeteId=self.rfile.readline().strip()
-        if requeteId=='positionContacts':
+        if requeteId=='actualisePosition':
+            clientPosition=self.rfile.readline().strip()
+            traitement=actualisePosition(clientId, clientPosition)
+        elif requeteId=='actualiseContacts':
+            nombreContacts=int(self.rfile.readline().strip()))
+            contactsNums=[clientId]
+            for compteur in range(nombreContacts):
+                contactsNums.append(self.rfile.readline().strip())
+            traitement=actualiseContacts(clientId, contactsNums)
+        elif requeteId=='positionContacts':
             rayon=float(self.rfile.readline().strip())
             traitement=positionContacts(clientId, rayon) #classe appropriée à définir
             reponse=traitement.resultat #renvoie la liste des positions des contacts dans un format à définir
@@ -27,19 +36,19 @@ class traitementRequete(socketserver.StreamRequestHandler):
             rayon=float(self.rfile.readline().strip())
             traitement=positionEvenementsPublics(clientId, rayon) #classe appropriée encore a écrire
             reponse=traitement.resultat #renvoie la liste des positions des contacts dans un format à définir
-        elif requeteId='etatContact':
+        elif requeteId=='etatContact':
             contactId=int(self.rfile.readline().strip())
             traitement=etatContact(clientId, contactId)
             reponse=traitement.resultat #renvoie la liste des positions des contacts dans un format à définir
-        elif requeteId='etatEvenement':
+        elif requeteId=='etatEvenement':
             evenementId=int(self.rfile.readline().strip())
             traitement=etatEvenement(clientId, evenementId)
             reponse=traitement.resultat #renvoie la liste des positions des contacts dans un format à définir
-        elif requeteId='joindreEvenement':
+        elif requeteId=='joindreEvenement':
             evenementId=int(self.rfile.readline().strip())
             traitement=joindreEvenement(clientId, evenementId)
             reponse=traitement.resultat #renvoie la liste des positions des contacts dans un format à définir
-        elif requeteId='creerEvenement':
+        elif requeteId=='creerEvenement':
             timestampDebut=self.rfile.readline().strip()
             timestampFin=self.rfile.readline().strip()
             positionGPS=self.rfile.readline().strip()
@@ -52,15 +61,15 @@ class traitementRequete(socketserver.StreamRequestHandler):
             public=bool(self.rfile.readline().strip())
             traitement=creerEvenement(timestampDebut, timestampFin, positionGPS, texte, invitesId, public)
             reponse=traitement.evenementId
-        elif requeteId='inviterEvenement':
+        elif requeteId=='inviterEvenement':
             evenementId=int(self.rfile.readline().strip())
             nombreInvites=int(self.rfile.readline().strip())
-            invitesId=[clientId]
+            invitesId=[]
             for compteur in range(nombreInvites):
                 invitesId.append(int(self.rfile.readline().strip()))
             traitement=ajouterInvites(evenementId, invitesId)
             reponse=''
-        elif requeteId='requeteModule':
+        elif requeteId=='requeteModule':
             moduleId=self.rfile.readline().strip()
             longueurRequete=int(self.rfile.readline().strip())
             requeteModule=self.rfile.readline(longueurRequete).strip())
