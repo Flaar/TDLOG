@@ -4,6 +4,8 @@ import socket
 import socketserver
 import sys
 import thread
+import evenements as *
+import contacts as *
 
 HOST = '' #représente toutes les interfaces réseau
 PORT = 8888 #Port non prviligié à choisir
@@ -21,32 +23,32 @@ class traitementRequete(socketserver.StreamRequestHandler):
         requeteId=self.rfile.readline().strip()
         if requeteId=='actualisePosition':
             clientPosition=self.rfile.readline().strip()
-            traitement=actualisePosition(clientId, clientPosition)
+            traitement=contacts.actualisePositionClient(clientId, clientPosition)
         elif requeteId=='actualiseContacts':
             nombreContacts=int(self.rfile.readline().strip()))
             contactsNums=[clientId]
             for compteur in range(nombreContacts):
                 contactsNums.append(self.rfile.readline().strip())
-            traitement=actualiseContacts(clientId, contactsNums)
+            traitement=contacts.actualiseListe(clientId, contactsNums)
         elif requeteId=='positionContacts':
             rayon=float(self.rfile.readline().strip())
-            traitement=positionContacts(clientId, rayon) #classe appropriée à définir
+            traitement=contacts.position(clientId, rayon) #classe appropriée à définir
             reponse=traitement.resultat #renvoie la liste des positions des contacts dans un format à définir
         elif requeteId=='positionEvenementsPublics':
             rayon=float(self.rfile.readline().strip())
-            traitement=positionEvenementsPublics(clientId, rayon) #classe appropriée encore a écrire
+            traitement=evenements.position(clientId, rayon) #classe appropriée encore a écrire
             reponse=traitement.resultat #renvoie la liste des positions des contacts dans un format à définir
         elif requeteId=='etatContact':
             contactId=int(self.rfile.readline().strip())
-            traitement=etatContact(clientId, contactId)
+            traitement=contacts.etat(clientId, contactId)
             reponse=traitement.resultat #renvoie la liste des positions des contacts dans un format à définir
         elif requeteId=='etatEvenement':
             evenementId=int(self.rfile.readline().strip())
-            traitement=etatEvenement(clientId, evenementId)
+            traitement=evenements.etat(clientId, evenementId)
             reponse=traitement.resultat #renvoie la liste des positions des contacts dans un format à définir
         elif requeteId=='joindreEvenement':
             evenementId=int(self.rfile.readline().strip())
-            traitement=joindreEvenement(clientId, evenementId)
+            traitement=evenements.joindre(clientId, evenementId)
             reponse=traitement.resultat #renvoie la liste des positions des contacts dans un format à définir
         elif requeteId=='creerEvenement':
             timestampDebut=self.rfile.readline().strip()
@@ -59,7 +61,7 @@ class traitementRequete(socketserver.StreamRequestHandler):
             for compteur in range(nombreInvites):
                 invitesId.append(int(self.rfile.readline().strip()))
             public=bool(self.rfile.readline().strip())
-            traitement=creerEvenement(timestampDebut, timestampFin, positionGPS, texte, invitesId, public)
+            traitement=evenements.creer(timestampDebut, timestampFin, positionGPS, texte, invitesId, public)
             reponse=traitement.evenementId
         elif requeteId=='inviterEvenement':
             evenementId=int(self.rfile.readline().strip())
@@ -67,13 +69,13 @@ class traitementRequete(socketserver.StreamRequestHandler):
             invitesId=[]
             for compteur in range(nombreInvites):
                 invitesId.append(int(self.rfile.readline().strip()))
-            traitement=ajouterInvites(evenementId, invitesId)
+            traitement=evenements.ajouterInvites(evenementId, invitesId)
             reponse=''
         elif requeteId=='requeteModule':
             moduleId=self.rfile.readline().strip()
             longueurRequete=int(self.rfile.readline().strip())
             requeteModule=self.rfile.readline(longueurRequete).strip())
-            traitement=modules(moduleId, requeteModule)
+            traitement=modules.module(moduleId, requeteModule)
             reponse=traitement.resultat
         else:
             reponse='ERREUR : requete incomplete ou mal identifiee'
