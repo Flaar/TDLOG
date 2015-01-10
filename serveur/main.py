@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 
+#fichier debuggué et fonctionnel
+#reste a coder les appels bdd et ce qui va avec (traitements, modules, etc)
+
 import socket
 import socketserver
 import sys
