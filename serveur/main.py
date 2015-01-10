@@ -3,33 +3,33 @@
 import socket
 import socketserver
 import sys
-import thread
-import evenements as *
-import contacts as *
+import threading
+import evenements
+import contacts
+import utilisateur
 
 HOST = '' #représente toutes les interfaces réseau
-PORT = 8888 #Port non prviligié à choisir
+PORT = 9888 #Port non prviligié à choisir
 
 #Classe gérant les requètes reçues sous forme de fichiers. Ces fichiers seront au format XML ou JSON selon le choix retenu plus tard et seront traités
 class traitementRequete(socketserver.StreamRequestHandler):
     print("Nouvelle requète traitée dans le thread n°", threading.current_thread())
-    #la fonction setup est générique pour cette classe et contient l'initialisation si nécessaire
-    def setup(self):
-        pass
+
     #la fonction handle est générique pour cette classe et contient toute la gestion de la requète. Elle est appellée à chaque requète
     def handle(self):
         #self.rfile est un fichier contenant le contenu de la requete
         clientId=int(self.rfile.readline().strip())
-        requeteId=self.rfile.readline().strip()
+        print(clientId)
+        requeteId=self.rfile.readline().strip().decode('utf_8')
         if requeteId=='actualisePosition':
-            clientPosition=self.rfile.readline().strip()
-            traitement=contacts.actualisePositionClient(clientId, clientPosition)
+            clientPosition=self.rfile.readline().strip().decode('utf_8')
+            traitement=utilisateur.actualisePosition(clientId, clientPosition)
         elif requeteId=='actualiseContacts':
-            nombreContacts=int(self.rfile.readline().strip()))
+            nombreContacts=int(self.rfile.readline().strip())
             contactsNums=[clientId]
             for compteur in range(nombreContacts):
                 contactsNums.append(self.rfile.readline().strip())
-            traitement=contacts.actualiseListe(clientId, contactsNums)
+            traitement=utilisateur.actualiseListe(clientId, contactsNums)
         elif requeteId=='positionContacts':
             rayon=float(self.rfile.readline().strip())
             traitement=contacts.position(clientId, rayon) #classe appropriée à définir
@@ -72,17 +72,15 @@ class traitementRequete(socketserver.StreamRequestHandler):
             traitement=evenements.ajouterInvites(evenementId, invitesId)
             reponse=''
         elif requeteId=='requeteModule':
-            moduleId=self.rfile.readline().strip()
+            moduleId=self.rfile.readline().strip().decode('utf_8')
             longueurRequete=int(self.rfile.readline().strip())
-            requeteModule=self.rfile.readline(longueurRequete).strip())
+            requeteModule=self.rfile.readline(longueurRequete).strip().decode('utf_8')
             traitement=modules.module(moduleId, requeteModule)
             reponse=traitement.resultat
         else:
             reponse='ERREUR : requete incomplete ou mal identifiee'
-        self.wfile.write(reponse)
-    #la fonction finish est générique pour cette classe et contient le nettoyage si nécessaire
-    def finish():
-        pass
+        self.wfile.write(bytes(reponse,'utf_8'))
+
 
 #Classe implémentant le serveur TCP qui permet les échanges mis en place par la classe précédente. Ce serveur est threadé (et peut être aussi forké si on a un serveur multicoeur) afin de permettre de traiter plusieurs requètes simultanées)
 
@@ -94,7 +92,7 @@ if __name__=="__main__":
 
     serveurThread=threading.Thread(target=serveur.serve_forever)
     serveurThread.daemon = True
-    serverThread.start()
+    serveurThread.start()
 
     print("Boucle serveur tournant dans le thread n°", serveurThread.name)
     
