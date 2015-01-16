@@ -43,15 +43,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.util.Log;
 
-//import org.osmdroid.DefaultResourceProxyImpl;
-//import org.osmdroid.ResourceProxy;
-//import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-//import org.osmdroid.views.MapController;
-//import org.osmdroid.util.GeoPoint;
-//import org.osmdroid.views.MapView;
-//import org.osmdroid.views.*;
-
-
 public class ActivitePrincipale extends Activity {
 	  static final LatLng HAMBURG = new LatLng(53.558, 9.927);
 	  static final LatLng KIEL = new LatLng(53.551, 9.993);
@@ -89,17 +80,7 @@ public class ActivitePrincipale extends Activity {
 	                  .icon(BitmapDescriptorFactory
 	                      .fromResource(R.drawable.ic_launcher)));
 	              
-	              //
 	              updatePlaces();
-	              //
-	              
-	              
-	              /*userMarker = map.addMarker(new MarkerOptions()
-	              .position(lastLatLng)
-	              .title("You are here")
-	              .icon(BitmapDescriptorFactory.fromResource(userIcon))
-	              .snippet("Your last recorded location"));*/
-	        
 	        
 	            }
 	    }
@@ -174,19 +155,3 @@ public class ActivitePrincipale extends Activity {
 		}
 	  
 	}
-
-
-
-//OSMDROID CODE
-/*public void onCreate(Bundle savedInstanceState){
-     super.onCreate(savedInstanceState);
-     setContentView(R.layout.activity_activite_principale);
-     MapView mMapView = (MapView) findViewById(R.id.mapview);
-     mMapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
-     mMapView.setBuiltInZoomControls(true);
-     MapController mMapController = (MapController) mMapView.getController();
-     mMapController.setZoom(15);
-     //GeoPoint gPt = new GeoPoint(51500000, -150000);
-     GeoPoint gPt = new GeoPoint(43.73741099, 7.42081600);
-     mMapController.setCenter(gPt);
- }*/
