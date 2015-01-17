@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import mysql.connector()
+import mysql.connector
 import sys
 
 #La classe contacts utilise la table SQL définie par ces contraintes :
@@ -30,16 +30,8 @@ class contacts:
     def __init__(self):
         self.logs=''
         try:
-            self.connnexion=mysql.connector.connect(user='root', password='7Madu:d3', database='contacts', host='localhost');
+            self.connnexion=mysql.connector.connect(user='root', password='projetdumythe', database='contacts', host='localhost');
             self.curseur=self.connexion.cursor()
-
-    def actualisePositionClient(self, clientId, clientPositionX, clientPositionY):
-        query="UPDATE contacts SET positionX ="+float(clientPositionX)+" WHERE id="+clientId
-        self.curseur.execute(query)
-        query="UPDATE contacts SET positionY ="+float(clientPositionY)+" WHERE id="+clientId
-        self.curseur.execute(query)
-        self.connexion.close()
-        self.logs=self.logs+'actualisePosition OK'
 
     def actualiseListe(self, clientId, contactsNums):
         contactsNums=formatNumeros(contactsNums)
