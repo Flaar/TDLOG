@@ -35,7 +35,7 @@ class contacts:
 
     def actualiseListe(self, clientId, contactsNums):
         contactsNums=formatNumeros(contactsNums)
-        contactsIds=[]
+        nouveauContactsIds=[]
         for compteur in range(len(contactsNums)):
             num=contactsNums[compteur]
             query="SELECT id FROM contacts WHERE telephone="+num
@@ -44,7 +44,7 @@ class contacts:
             curseur.fetchall()
             contactId=contactId[0]
             if len(contactId)>0:
-                contactsIds.append(int(contactId))
+                nouveauxContactsIds.append(int(contactId))
             elif len(contactsId)==0:
                 self.logs=self.logs+str(num)+" pas dans DB"
             else:
@@ -53,7 +53,7 @@ class contacts:
         self.curseur.execute(query)
         ancienContactsIds=self.curseur.fetchone()[0]
         ancienContactsIds=split(ancienContactsIds)
-        contactsIds=ancienContactsId+contactsIds
+        contactsIds=ancienContactsId+nouveauxContactsIds
         contactsIds=concatene(contactsIds)
         query="UPDATE contacts SET contactsIds '"+contactsIds+"' WHERE id="+clientId
         self.logs=self.logs+'actualiseContacts OK'
