@@ -32,4 +32,6 @@ APPLI :
 	-l'installation de cet outil se fait assez bien, bien que longue et non intuitive, cette démarche est bien documentée sur internet
 	-
 	
--
+-compilation de l'appli :
+	-après quelques temps, quelques mises à jour par le SDK Manager, etc... l'espace de travail "workspace"
+	 est à nettoyer et crée sinon une erreur : Building Workspace (waiting) qui se résout en nettoyant l'espace de travail
