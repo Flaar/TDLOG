@@ -11,12 +11,15 @@ class MyTCPHandler(socketserver.StreamRequestHandler):
     def handle(self):
         # self.rfile is a file-like object created by the handler;
         # we can now use e.g. readline() instead of raw recv() calls
-        self.data=self.rfile.readline().strip().decode('utf_8')
-        # Likewise, self.wfile is a file-like object used to write back
-        # to the client
-        
-        self.wfile.write(bytes(self.data+' toi meme ','utf_8'))
-        print(self.data, threading.current_thread)
+        self.data='bite'
+        while self.data!='end':
+            self.data=self.rfile.readline().strip().decode('utf_8')
+            # Likewise, self.wfile is a file-like object used to write back
+            # to the client
+            
+            self.wfile.write(bytes(self.data+' toi meme ','utf_8'))
+            print(self.data, threading.current_thread)
+            
 
 class serveurTCPAsync(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
@@ -25,7 +28,7 @@ class serveurTCPAsync(socketserver.ThreadingMixIn, socketserver.TCPServer):
 
 
 if __name__ == "__main__":
-    HOST, PORT = "localhost", 9998
+    HOST, PORT = '', 6667
 
     serveur=serveurTCPAsync((HOST, PORT), MyTCPHandler)
 
