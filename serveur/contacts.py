@@ -23,7 +23,13 @@ def concatene(liste):
 def formatNumeros(numeros):
     return numeros
 
-    
+def ligneParLigne(liste):
+    retour=''
+    for compteur in range(len(liste)-1):
+        retour=retour+str(liste)+'\n'
+    retour=retour+str(liste(len(liste)-1))
+    return retour
+   
 
 
 class contacts:
@@ -35,7 +41,8 @@ class contacts:
 
     def actualiseListe(self, clientId, contactsNums):
         contactsNums=formatNumeros(contactsNums)
-        nouveauContactsIds=[]
+        nouveauxContactsIds=[]
+        nouveauxContactsNums=[]
         for compteur in range(len(contactsNums)):
             num=contactsNums[compteur]
             query="SELECT id FROM contacts WHERE telephone="+num
@@ -45,10 +52,11 @@ class contacts:
             contactId=contactId[0]
             if len(contactId)>0:
                 nouveauxContactsIds.append(int(contactId))
+                nouveauxContactsNums.append(num)
             elif len(contactsId)==0:
-                self.logs=self.logs+str(num)+" pas dans DB"
+                self.logs=self.logs+str(num)+" pas dans DB "
             else:
-                self.logs=self.logs+"erreur DB"
+                self.logs=self.logs+str(num)+" erreur DB "
         query="SELECT contactsIds FROM contacts WHERE id="+clientId
         self.curseur.execute(query)
         ancienContactsIds=self.curseur.fetchone()[0]
@@ -56,9 +64,9 @@ class contacts:
         contactsIds=ancienContactsId+nouveauxContactsIds
         contactsIds=concatene(contactsIds)
         query="UPDATE contacts SET contactsIds '"+contactsIds+"' WHERE id="+clientId
-        self.logs=self.logs+'actualiseContacts OK'
+        self.logs=self.logs+'\nactualiseContactsOK\n'
         self.connexion.close()
-        return contactsIds
+        return self.logs+ligneParLigne(nouveauxContactsNums)+'\n'+ligneParLigne(nouveauxContactsIds)
 
     def position(self, clientId, rayon)
         query="SELECT contactsIds FROM contacts WHERE id="+clientId
@@ -87,6 +95,6 @@ class contacts:
                 contactsPositionsY.append(positionY)
                 contactsProchesIds.append(contactId)  
         self.connexion.close()
-        return (contactsIds, contactsPositionsX, contactsPositionsY)
+        return self.logs+'\npositionContactsOk\n'+ligneParLigne(contactsIds)+ligneParLigne(contactsPositionsX)+ligneParLigne(contactsPositionsY)
     
             
