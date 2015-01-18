@@ -1,15 +1,14 @@
 #!/usr/bin/python3
 
 #fichier debuggué et fonctionnel
-#reste a coder les appels bdd et ce qui va avec (traitements, modules, etc)
 
 import socket
 import socketserver
 import sys
 import threading
-import evenements
-import contacts
-import utilisateur
+import evenements as *
+import contacts as *
+import utilisateur as *
 
 HOST = '' #représente toutes les interfaces réseau
 PORT = 9888 #Port non prviligié à choisir
@@ -21,68 +20,87 @@ class traitementRequete(socketserver.StreamRequestHandler):
     #la fonction handle est générique pour cette classe et contient toute la gestion de la requète. Elle est appellée à chaque requète
     def handle(self):
         #self.rfile est un fichier contenant le contenu de la requete
+
+        
         clientId=int(self.rfile.readline().strip())
         print(clientId)
         requeteId=self.rfile.readline().strip().decode('utf_8')
-        if requeteId=='actualisePosition':
-            clientPosition=self.rfile.readline().strip().decode('utf_8')
-            traitement=utilisateur.actualisePosition(clientId, clientPosition)
+
+        client=utilisateur()
+        contacts=bddContacts()
+        evenement=bddEvenements()
+
+#requètes sur le client
+
+        if requeteId=='nouvelUtilisateur':
+            nom=self.rfile.readline().strip().decode('utf_8')
+            prenom=self.rfile.readline().strip().decode('utf_8')
+            telephone=self.rfile.readline().strip().decode('utf_8')
+            traitement=client.nouveau(nom, prenom, telephone)
+
+        elif requeteId=='actualisePosition':
+            clientPositionX=self.rfile.readline().strip().decode('utf_8')
+            clientPositionY=self.rfile.readline().strip().decode('utf_8')
+            traitement=client.actualisePosition(clientId, clientPositionX, clientPositionY)
+
+#requètes sur les contacts
+        
         elif requeteId=='actualiseContacts':
             nombreContacts=int(self.rfile.readline().strip())
-            contactsNums=[clientId]
+            contactsNums=[]
             for compteur in range(nombreContacts):
-                contactsNums.append(self.rfile.readline().strip())
-            traitement=utilisateur.actualiseListe(clientId, contactsNums)
+                contactsNums.append(self.rfile.readline().strip().decode('utf_8'))
+            traitement=contacts.actualiseListe(clientId, contactsNums)
+            
         elif requeteId=='positionContacts':
-            rayon=float(self.rfile.readline().strip())
+            rayon=float(self.rfile.readline().strip().decode('utf_8'))
             traitement=contacts.position(clientId, rayon) #classe appropriée à définir
-            reponse=traitement.resultat #renvoie la liste des positions des contacts dans un format à définir
-        elif requeteId=='positionEvenementsPublics':
-            rayon=float(self.rfile.readline().strip())
-            traitement=evenements.position(clientId, rayon) #classe appropriée encore a écrire
-            reponse=traitement.resultat #renvoie la liste des positions des contacts dans un format à définir
-        elif requeteId=='etatContact':
-            contactId=int(self.rfile.readline().strip())
-            traitement=contacts.etat(clientId, contactId)
-            reponse=traitement.resultat #renvoie la liste des positions des contacts dans un format à définir
-        elif requeteId=='etatEvenement':
-            evenementId=int(self.rfile.readline().strip())
-            traitement=evenements.etat(clientId, evenementId)
-            reponse=traitement.resultat #renvoie la liste des positions des contacts dans un format à définir
-        elif requeteId=='joindreEvenement':
-            evenementId=int(self.rfile.readline().strip())
-            traitement=evenements.joindre(clientId, evenementId)
-            reponse=traitement.resultat #renvoie la liste des positions des contacts dans un format à définir
+            
+#requètes sur les évènements
+
         elif requeteId=='creerEvenement':
-            timestampDebut=self.rfile.readline().strip()
-            timestampFin=self.rfile.readline().strip()
-            positionGPS=self.rfile.readline().strip()
-            longueurTexte=int(self.rfile.readline().strip())
-            texte=self.rfile.readline(longueurTexte).strip()
-            nombreInvites=int(self.rfile.readline().strip())
+            timestampDebut=self.rfile.readline().strip().decode('utf_8')
+            timestampFin=self.rfile.readline().strip().decode('utf_8')
+            positionGPS=self.rfile.readline().strip().decode('utf_8')
+            longueurTexte=int(self.rfile.readline().strip()).decode('utf_8')
+            texte=self.rfile.readline(longueurTexte).strip().decode('utf_8')
+            nombreInvites=int(self.rfile.readline().strip()).decode('utf_8')
             invitesId=[clientId]
             for compteur in range(nombreInvites):
-                invitesId.append(int(self.rfile.readline().strip()))
-            public=bool(self.rfile.readline().strip())
+                invitesId.append(int(self.rfile.readline().strip().decode('utf_8')))
+            public=bool(self.rfile.readline().strip().decode('utf_8'))
             traitement=evenements.creer(timestampDebut, timestampFin, positionGPS, texte, invitesId, public)
-            reponse=traitement.evenementId
+            
+        elif requeteId=='positionEvenementsPublics':
+            rayon=float(self.rfile.readline().strip().decode('utf_8'))
+            traitement=evenements.position(clientId, rayon) #classe appropriée encore a écrire
+            
+        elif requeteId=='joindreEvenement':
+            evenementId=int(self.rfile.readline().strip().decode('utf_8'))
+            traitement=evenements.joindre(clientId, evenementId)
+            
         elif requeteId=='inviterEvenement':
-            evenementId=int(self.rfile.readline().strip())
-            nombreInvites=int(self.rfile.readline().strip())
+            evenementId=int(self.rfile.readline().strip().decode('utf_8'))
+            nombreInvites=int(self.rfile.readline().strip().decode('utf_8'))
             invitesId=[]
             for compteur in range(nombreInvites):
-                invitesId.append(int(self.rfile.readline().strip()))
+                invitesId.append(int(self.rfile.readline().strip().decode('utf_8')))
             traitement=evenements.ajouterInvites(evenementId, invitesId)
-            reponse=''
+            
+
+#requètes sur les modules complémentaires
+
         elif requeteId=='requeteModule':
             moduleId=self.rfile.readline().strip().decode('utf_8')
-            longueurRequete=int(self.rfile.readline().strip())
+            longueurRequete=int(self.rfile.readline().strip().decode('utf_8'))
             requeteModule=self.rfile.readline(longueurRequete).strip().decode('utf_8')
             traitement=modules.module(moduleId, requeteModule)
-            reponse=traitement.resultat
+            
         else:
-            reponse='ERREUR : requete incomplete ou mal identifiee'
-        self.wfile.write(bytes(reponse,'utf_8'))
+            traitement='ERREUR : requete incomplete ou mal identifiee'
+
+
+        self.wfile.write(bytes(traitement,'utf_8'))
 
 
 #Classe implémentant le serveur TCP qui permet les échanges mis en place par la classe précédente. Ce serveur est threadé (et peut être aussi forké si on a un serveur multicoeur) afin de permettre de traiter plusieurs requètes simultanées)

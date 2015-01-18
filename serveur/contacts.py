@@ -32,7 +32,7 @@ def ligneParLigne(liste):
    
 
 
-class contacts:
+class bddContacts:
     def __init__(self):
         self.logs=''
         try:
@@ -41,38 +41,45 @@ class contacts:
 
     def actualiseListe(self, clientId, contactsNums):
         contactsNums=formatNumeros(contactsNums)
-        nouveauxContactsIds=[]
-        nouveauxContactsNums=[]
-        for compteur in range(len(contactsNums)):
-            num=contactsNums[compteur]
-            query="SELECT id FROM contacts WHERE telephone="+num
+        #Si on nous fournit des numéros de téléphone de nouveaux contacts, on les rentre dans la base de données
+        if contactsNums!="None":
+            nouveauxContactsIds=[]
+            nouveauxContactsNums=[]
+            for compteur in range(len(contactsNums)):
+                num=contactsNums[compteur]
+                query="SELECT id FROM contacts WHERE telephone="+num
+                self.curseur.execute(query)
+                contactId=self.curseur.fetchone()
+                contactId=contactId[0]
+                if len(contactId)>0:
+                    nouveauxContactsIds.append(int(contactId))
+                    nouveauxContactsNums.append(num)
+                elif len(contactsId)==0:
+                    self.logs=self.logs+str(num)+" pas dans DB "
+                else:
+                    self.logs=self.logs+str(num)+" erreur DB "
+            query="SELECT contactsIds FROM contacts WHERE id="+clientId
             self.curseur.execute(query)
-            contactId=self.curseur.fetchone()
-            curseur.fetchall()
-            contactId=contactId[0]
-            if len(contactId)>0:
-                nouveauxContactsIds.append(int(contactId))
-                nouveauxContactsNums.append(num)
-            elif len(contactsId)==0:
-                self.logs=self.logs+str(num)+" pas dans DB "
-            else:
-                self.logs=self.logs+str(num)+" erreur DB "
-        query="SELECT contactsIds FROM contacts WHERE id="+clientId
-        self.curseur.execute(query)
-        ancienContactsIds=self.curseur.fetchone()[0]
-        ancienContactsIds=split(ancienContactsIds)
-        contactsIds=ancienContactsId+nouveauxContactsIds
-        contactsIds=concatene(contactsIds)
-        query="UPDATE contacts SET contactsIds '"+contactsIds+"' WHERE id="+clientId
-        self.logs=self.logs+'\nactualiseContactsOK\n'
+            ancienContactsIds=self.curseur.fetchone()[0]
+            ancienContactsIds=split(ancienContactsIds)
+            contactsIds=ancienContactsId+nouveauxContactsIds
+            contactsIdstexte=concatene(contactsIds)
+            query="UPDATE contacts SET contactsIds '"+contactsIdstexte+"' WHERE id="+clientId
+            self.curseur.execute(query)
+        reponse='actualiseListeOk\n'
+        #affichage de la liste des contacts, nom, prenom
+        for compteur in range(len(contactsIds)):
+            query="SELECT nom, prenom, telephone FROM contacts WHERE id="+contactsIds(compteur)
+            self.curseur.execute(query)
+            contact=self.curseur.fetchone()
+            reponse=reponse+str(contactsIds[compteur])+'\n'+contact[0]+'\n'+contact[1]+'\n'+contact[2]+'\n'
         self.connexion.close()
-        return self.logs+ligneParLigne(nouveauxContactsNums)+'\n'+ligneParLigne(nouveauxContactsIds)
+        return reponse
 
     def position(self, clientId, rayon)
         query="SELECT contactsIds FROM contacts WHERE id="+clientId
         self.curseur.execute(query)
-        contactsIds=self.curseur.fetchone()
-        contactsIds=contactsIds[0]
+        contactsIds=self.curseur.fetchone()[0]
         contactsIds=split(contactsIds)
         query="SELECT positionX FROM contacts WHERE id="+contactId
         self.curseur.execute(query)
@@ -93,8 +100,15 @@ class contacts:
             if clientPositionX-rayon<positionX and positionX<clientPositionX+rayon and clientPositionY-rayon<positionY and positionY<clientPositionY+rayon:
                 contactsPositionsX.append(positionX)
                 contactsPositionsY.append(positionY)
-                contactsProchesIds.append(contactId)  
+                contactsProchesIds.append(contactId)
+        reponse='positionContactsOk\n'
+        #affichage de la liste de contacts, nom, prenom
+        for compteur in range(len(contactsIds)):
+            query="SELECT nom, prenom, telephone FROM contacts WHERE id="+contactsIds[compteur]
+            self.curseur.execute(query)
+            contact=self.curseur.fetchone()
+            reponse=reponse+str(contactsIds[compteur])+'\n'+contact[0]+'\n'+contact[1]+'\n'+contact[2]+'\n'+contactsPositionsX[compteur]+'\n'+contactsPositionY[compteur]+'\n'
         self.connexion.close()
-        return self.logs+'\npositionContactsOk\n'+ligneParLigne(contactsIds)+ligneParLigne(contactsPositionsX)+ligneParLigne(contactsPositionsY)
+        return reponse
     
             
