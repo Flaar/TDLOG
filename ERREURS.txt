@@ -1,0 +1,37 @@
+PROBLEMES ET ERREURS RENCONTRES :
+
+APPLI :
+-installation de l'outil de développement Android SDK sous Windows:
+	-"Unable to install JDK" => il a suffit de supprimer les versions antérieures de JDK et JRE et insister
+	-Variables d'environnement à paramétrer dans certains cas
+	-Emulateur introuvable => problème à la décompression du dossier, une nouvelle tentative l'a résolue
+	
+-installation de l'outil de développement Android SDK sous Linux:
+	- %%%%%%%%%%%%%%%%%%%% A COMPLETER %%%%%%%%%%%%%%%%%%%%%
+	-
+	- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	
+-installation de la bibliothèque géographique MapsForge :
+	-documentation introuvable, puis trop concise
+	-quasi inexistance de tutoriels
+	-Fichiers .jar non fournis, à générer soi-même
+	-impossible à utiliser sous Windows
+	-presque impossible sous Linux, la génération d'archives .jar n'est pas évidente, et la configuration de la bibliothèque est assez floue
+
+-installation de la bibliothèque géographique OSMDroid (OSM = open street map)
+	-difficulté de trouver des tutoriels assez précis
+	-ceci nécessite la génération d'un format particulier de cartes :
+		-le format le plus employé (Mapnik) n'est plus supporté par certains générateurs
+		-cela conduit à utiliser d'autres types (MapQuest) mais la paramétrisation pour aller de l'un à l'autre n'est pas claire
+		-les fichiers nécessitent d'être placés sur un certain chemin, différent selon qu'il s'agisse d'un mobile ou d'un émulateur
+	-le code finit par compiler mais la carte ne s'affiche ni sur mobile ni sur émulateur
+	
+=> Google Maps
+-installation de l'outil Google Maps :
+	-l'installation de cet outil se fait assez bien, bien que longue et non intuitive, cette démarche est bien documentée sur internet
+	-
+	
+-compilation de l'appli :
+	-après quelques temps, quelques mises à jour par le SDK Manager, etc... l'espace de travail "workspace"
+	 est à nettoyer et crée sinon une erreur : Building Workspace (waiting) qui se résout en nettoyant l'espace de travail
