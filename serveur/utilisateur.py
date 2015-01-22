@@ -3,25 +3,24 @@
 import mysql.connector
 import sys
 
-class utilisateur:
+class bddUtilisateur:
 
     def __init__(self):
         self.logs=''
-        try:
-            self.connnexion=mysql.connector.connect(user='tdlog', password='projetdumythe', database='contacts', host='localhost');
-            self.curseur=self.connexion.cursor()
+        self.connexion=mysql.connector.connect(user='tdlog', password='projetdumythe', database='contacts', host='localhost')
+        self.curseur=self.connexion.cursor()
 
-    def nouveau(self, nom, prenom, telephone)
-        query="INSERT INTO contacts (nom, prenom, telephone, positionX, positionY, tempsPosition, contactsIds) VALUES ('"+nom+"', '"+prenom+"', '"+telephone+"', 0, 0, NOW(), '')"
+    def nouveau(self, nom, prenom, telephone):
+        query="INSERT INTO repertoire_final (nom, prenom, telephone, positionX, positionY, tempsPosition, contactsIds) VALUES ('"+nom+"', '"+prenom+"', '"+telephone+"', 0, 0, NOW(), '')"
         self.curseur.execute(query)
         self.connexion.close()
         return 'nouveauClientOk'
 
 
     def actualisePosition(self, clientId, clientPositionX, clientPositionY):
-        query="UPDATE contacts SET positionX ="+float(clientPositionX)+" WHERE id="+clientId
+        query="UPDATE repertoire_final SET positionX ="+str(float(clientPositionX))+" WHERE id="+str(clientId)
         self.curseur.execute(query)
-        query="UPDATE contacts SET positionY ="+float(clientPositionY)+" WHERE id="+clientId
+        query="UPDATE repertoire_final SET positionY ="+str(float(clientPositionY))+" WHERE id="+str(clientId)
         self.curseur.execute(query)
         self.connexion.close()
         return 'actualisePosition OK'

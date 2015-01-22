@@ -28,7 +28,7 @@ class serveurTCPAsync(socketserver.ThreadingMixIn, socketserver.TCPServer):
 
 
 if __name__ == "__main__":
-    HOST, PORT = '', 6667
+    HOST, PORT = '', 6768
 
     serveur=serveurTCPAsync((HOST, PORT), MyTCPHandler)
 

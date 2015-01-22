@@ -6,12 +6,13 @@ import socket
 import socketserver
 import sys
 import threading
-import evenements as *
-import contacts as *
-import utilisateur as *
+import evenements
+import contacts
+import utilisateur
 
 HOST = '' #représente toutes les interfaces réseau
-PORT = 9888 #Port non prviligié à choisir
+PORT = 6667
+#Port non prviligié à choisir
 
 #Classe gérant les requètes reçues sous forme de fichiers. Ces fichiers seront au format XML ou JSON selon le choix retenu plus tard et seront traités
 class traitementRequete(socketserver.StreamRequestHandler):
@@ -26,19 +27,17 @@ class traitementRequete(socketserver.StreamRequestHandler):
         print(clientId)
         requeteId=self.rfile.readline().strip().decode('utf_8')
 
-        client=utilisateur()
-        contacts=bddContacts()
-        evenement=bddEvenements()
-
 #requètes sur le client
 
         if requeteId=='nouvelUtilisateur':
+            client=utilisateur.bddUtilisateur()
             nom=self.rfile.readline().strip().decode('utf_8')
             prenom=self.rfile.readline().strip().decode('utf_8')
             telephone=self.rfile.readline().strip().decode('utf_8')
             traitement=client.nouveau(nom, prenom, telephone)
 
         elif requeteId=='actualisePosition':
+            client=utilisateur.bddUtilisateur()
             clientPositionX=self.rfile.readline().strip().decode('utf_8')
             clientPositionY=self.rfile.readline().strip().decode('utf_8')
             traitement=client.actualisePosition(clientId, clientPositionX, clientPositionY)
@@ -46,19 +45,22 @@ class traitementRequete(socketserver.StreamRequestHandler):
 #requètes sur les contacts
         
         elif requeteId=='actualiseContacts':
+            contact=contacts.bddContacts()
             nombreContacts=int(self.rfile.readline().strip())
             contactsNums=[]
             for compteur in range(nombreContacts):
                 contactsNums.append(self.rfile.readline().strip().decode('utf_8'))
-            traitement=contacts.actualiseListe(clientId, contactsNums)
+            traitement=contact.actualiseListe(clientId, contactsNums)
             
         elif requeteId=='positionContacts':
+            contact=contacts.bddContacts()
             rayon=float(self.rfile.readline().strip().decode('utf_8'))
-            traitement=contacts.position(clientId, rayon) #classe appropriée à définir
+            traitement=contact.position(clientId, rayon) #classe appropriée à définir
             
 #requètes sur les évènements
 
-        elif requeteId=='creerEvenement':
+        elif requeteId=='creerEvenement':     
+            evenement=evenements.bddEvenements()
             timestampDebut=self.rfile.readline().strip().decode('utf_8')
             timestampFin=self.rfile.readline().strip().decode('utf_8')
             positionGPS=self.rfile.readline().strip().decode('utf_8')
@@ -72,14 +74,17 @@ class traitementRequete(socketserver.StreamRequestHandler):
             traitement=evenements.creer(timestampDebut, timestampFin, positionGPS, texte, invitesId, public)
             
         elif requeteId=='positionEvenementsPublics':
+            evenement=evenements.bddEvenements()
             rayon=float(self.rfile.readline().strip().decode('utf_8'))
             traitement=evenements.position(clientId, rayon) #classe appropriée encore a écrire
             
         elif requeteId=='joindreEvenement':
+            evenement=evenements.bddEvenements()
             evenementId=int(self.rfile.readline().strip().decode('utf_8'))
             traitement=evenements.joindre(clientId, evenementId)
             
         elif requeteId=='inviterEvenement':
+            evenement=evenements.bddEvenements()
             evenementId=int(self.rfile.readline().strip().decode('utf_8'))
             nombreInvites=int(self.rfile.readline().strip().decode('utf_8'))
             invitesId=[]
