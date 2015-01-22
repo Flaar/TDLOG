@@ -2,12 +2,13 @@ package com.locolize.client_test;
 
 import java.util.ArrayList;
 import java.util.List;
- 
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
  
 public class DatabaseHandler extends SQLiteOpenHelper {
  
@@ -26,7 +27,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_NAME = "name";
     private static final String KEY_SURNAME = "surname";
     private static final String KEY_PH_NO = "phone_number";
- 
+    private static final String KEY_MESSAGE = "message";
+    
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -36,7 +38,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT," + KEY_SURNAME + " TEXT,"
-                + KEY_PH_NO + " TEXT" + ")";
+                + KEY_PH_NO + " TEXT,"+ KEY_MESSAGE + " TEXT" + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
  
@@ -54,6 +56,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * All CRUD(Create, Read, Update, Delete) Operations
      */
  
+        
     // Adding new contact
     void addContact(Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -62,7 +65,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_NAME, contact.name); // Contact Name
         values.put(KEY_SURNAME, contact.surname); 
         values.put(KEY_PH_NO, contact.phone_number); // Contact Phone
- 
+        values.put(KEY_MESSAGE, "");
         // Inserting Row
         db.insert(TABLE_CONTACTS, null, values);
         db.close(); // Closing database connection
@@ -73,8 +76,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
  
         Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID,
-                KEY_NAME, KEY_SURNAME, KEY_PH_NO }, KEY_ID + "=?",
-                new String[] { String.valueOf(id) }, null, null, null, null);// rajouter un null ?? parce que j'ai ajouté surname ??
+                KEY_NAME, KEY_SURNAME, KEY_PH_NO, KEY_MESSAGE }, KEY_ID + "=?",
+                new String[] { String.valueOf(id) }, null, null, null, null);// rajouter 2 null ?? parce que j'ai ajouté surname et message ??
         if (cursor != null)
             cursor.moveToFirst();
  
@@ -115,8 +118,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_PH_NO, contact.phone_number);
  
         // updating row
-        return db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",
-                new String[] { String.valueOf(contact.id)});
+        return db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",new String[] { String.valueOf(contact.id)});
+    }
+    
+    public int updateMessage (String text,Contact contact) {
+        SQLiteDatabase db = this.getWritableDatabase();
+ 
+        ContentValues values = new ContentValues();
+        values.put(KEY_MESSAGE, text);
+        
+        // updating row
+        return db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",new String[] { String.valueOf(contact.id)});
+    }
+    
+    String getMessage(Contact contact) {
+        SQLiteDatabase db = this.getReadableDatabase();
+ 
+        Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID,
+                KEY_NAME, KEY_SURNAME, KEY_PH_NO, KEY_MESSAGE }, KEY_ID + "=?",
+                new String[] { String.valueOf(contact.id) }, null, null, null, null);// rajouter 2 null ?? parce que j'ai ajouté surname et message ??
+        if (cursor != null)
+            cursor.moveToFirst();
+ 
+        String conversation = cursor.getString(4);
+        // return contact
+        return conversation;
     }
  
     // Deleting single contact
