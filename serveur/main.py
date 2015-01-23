@@ -11,7 +11,7 @@ import contacts
 import utilisateur
 
 HOST = '' #représente toutes les interfaces réseau
-PORT = 6767
+PORT = 6667
 #Port non prviligié à choisir
 
 #Classe gérant les requètes reçues sous forme de fichiers. Ces fichiers seront au format XML ou JSON selon le choix retenu plus tard et seront traités
@@ -47,6 +47,11 @@ class traitementRequete(socketserver.StreamRequestHandler):
             traitement=client.actualisePosition(clientId, clientPositionX, clientPositionY)
 
 #requètes sur les contacts
+
+        elif requeteId=='listeContacts':
+            contact=contacts.bddContacts()
+            traitement=contact.actualiseListe(clientId, 'None')
+
         
         elif requeteId=='actualiseContacts':
             contact=contacts.bddContacts()

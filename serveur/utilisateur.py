@@ -16,6 +16,7 @@ class bddUtilisateur:
         query="SELECT id from repertoire_final WHERE (nom, prenom) = ('"+nom+"', '"+prenom+"')"
         self.curseur.execute(query)
         clientId=int(self.curseur.fetchone()[0])
+        query="UPDATE repertoire_final SET contactsId = '"+str(clientId)+"' WHERE id ="+str(clientId)
         self.connexion.commit()
         self.connexion.close()
         return 'nouveauClientOk'+'\n'+str(clientId)
