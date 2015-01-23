@@ -49,8 +49,7 @@ class bddContacts:
                 num=contactsNums[compteur]
                 query="SELECT id FROM repertoire_final WHERE telephone="+num
                 self.curseur.execute(query)
-                contactId=self.curseur.fetchone()
-                contactId=contactId[0]
+                contactId=self.curseur.fetchone()[0]
                 if len(contactId)>0:
                     nouveauxContactsIds.append(int(contactId))
                     nouveauxContactsNums.append(num)

@@ -11,10 +11,20 @@ class bddUtilisateur:
         self.curseur=self.connexion.cursor()
 
     def nouveau(self, nom, prenom, telephone):
-        query="INSERT INTO repertoire_final (nom, prenom, telephone, positionX, positionY, tempsPosition, contactsIds) VALUES ('"+nom+"', '"+prenom+"', '"+telephone+"', 0, 0, NOW(), '')"
+        query="INSERT INTO repertoire_final (nom, prenom) VALUES ('"+nom+"', '"+prenom+"');"
+        print(query)
         self.curseur.execute(query)
+        query="SELECT id from repertoire_final WHERE (nom, prenom) = ('"+nom+"', '"+prenom+"');"
+        self.curseur.execute(query)
+        clientId=int(self.curseur.fetchone()[0])
         self.connexion.close()
-        return 'nouveauClientOk'
+        return 'nouveauClientOk'+'\n'+str(clientId)
+
+    def test(self,clientId):
+        query="SELECT nom from repertoire_final WHERE id = "+str(clientId)
+        self.curseur.execute(query)
+        reponse=self.curseur.fetchone()[0]
+        return reponse
 
 
     def actualisePosition(self, clientId, clientPositionX, clientPositionY):
