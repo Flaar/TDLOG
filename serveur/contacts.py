@@ -78,7 +78,6 @@ class bddContacts:
         for compteur in range(len(contactsIds)):
             query="SELECT nom, prenom, telephone FROM repertoire_final WHERE id="+str(contactsIds[compteur])
             self.curseur.execute(query)
-            print(query)
             contact=self.curseur.fetchone()
             reponse=reponse+str(contactsIds[compteur])+'\n'+contact[0]+'\n'+contact[1]+'\n'+contact[2]+'\n'
         self.connexion.commit()
