@@ -2,6 +2,7 @@
 
 import mysql.connector
 import sys
+import time
 
 #La classe repertoire_final  utilise la table SQL définie par ces contraintes :
 #CREATE TABLE repertoire_final  (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, telephone VARCHAR(12), nom VARCHAR(255), prenom VARCHAR(255), positionX FLOAT, positionY FLOAT, datePosition DATE, tempsPosition TIME, contactsIds TEXT,CONSTRAINT numero_unique UNIQUE (telephone) )
@@ -108,12 +109,12 @@ class bddContacts:
                 contactsProchesIds.append(contactId)
         reponse='positionContactsOk\n'
         #affichage de la liste de contacts, nom, prenom
-        for compteur in range(len(contactsIds)):
-            query="SELECT nom, prenom, telephone FROM repertoire_final WHERE id="+str(contactsIds[compteur])
+        for compteur in range(len(contactsProchesIds)):
+            query="SELECT nom, prenom, telephone FROM repertoire_final WHERE id="+str(contactsProchesIds[compteur])
             self.curseur.execute(query)
             contact=self.curseur.fetchone()
-            reponse=reponse+str(contactsIds[compteur])+'\n'+str(contact[0])+'\n'+str(contact[1])+'\n'+str(contact[2])+'\n'+str(contactsPositionsX[compteur])+'\n'+str(contactsPositionY[compteur])+'\n'
-            self.connexion.close()
+            reponse=reponse+str(contactsProchesIds[compteur])+'\n'+str(contact[0])+'\n'+str(contact[1])+'\n'+str(contact[2])+'\n'+str(contactsPositionsX[compteur])+'\n'+str(contactsPositionsY[compteur])+'\n'
+        self.connexion.close()
         return reponse
 
             

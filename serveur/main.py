@@ -11,7 +11,7 @@ import contacts
 import utilisateur
 
 HOST = '' #représente toutes les interfaces réseau
-PORT = 6667
+PORT = 6767
 #Port non prviligié à choisir
 
 #Classe gérant les requètes reçues sous forme de fichiers. Ces fichiers seront au format XML ou JSON selon le choix retenu plus tard et seront traités
