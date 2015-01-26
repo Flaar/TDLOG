@@ -13,12 +13,15 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import android.location.Location;
 import android.location.LocationManager;
 import android.content.Context;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -28,6 +31,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -35,6 +39,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -68,14 +73,14 @@ public void onCreate(Bundle savedInstanceState) {
 		otherIcon = R.drawable.purple_point;
 
 		if(theMap==null){
-			//get the map
+			//on "recupere" la carte
 			theMap = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
 			//check in case map/ Google Play services not available
 			if(theMap!=null){
 				//ok - proceed
-				theMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+				theMap.setMapType(GoogleMap.MAP_TYPE_NORMAL); //on peut aussi mettre HYBRID, TERRAIN, ...
 				//update location
-				//updatePlaces();
+				updatePlaces();
 			}
 		}
 		
@@ -123,16 +128,16 @@ public void onStatusChanged(String provider, int status, Bundle extras) {
 }
 
 private void updatePlaces(){
-	//get location manager
+	//on obtient le gestionnaire de lieu "location manager"
 	locMan = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-	//get last location
+	//obtention de la dernier position
 	Location lastLoc = locMan.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 	double lat = lastLoc.getLatitude();
 	double lng = lastLoc.getLongitude();
-	//create LatLng
+	//creation d'un objet LatLng
 	LatLng lastLatLng = new LatLng(lat, lng);
 
-	//remove any existing marker
+	//suppression de tous les marqueurs deja existants
 	if(userMarker!=null) userMarker.remove();
 	//create and set marker properties
 	userMarker = theMap.addMarker(new MarkerOptions()
