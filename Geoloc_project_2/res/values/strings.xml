@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Geoloc_project</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="OptionsActivity">Options</string>
+    <string name="ContactsActivity">Contacts</string>
+    <string name="UTILISATEUR">Utilisateur</string>
+
+</resources>
