@@ -103,7 +103,7 @@ public void onCreate(Bundle savedInstanceState) {
 						}
 						else{
 							options.position(point);
-							theMap.clear();
+							//theMap.clear();
 							theMap.addMarker(options);
 						}
 						//new GetTask().execute(point);
