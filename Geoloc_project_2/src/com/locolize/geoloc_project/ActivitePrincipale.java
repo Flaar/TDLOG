@@ -59,6 +59,8 @@ public class ActivitePrincipale extends Activity implements LocationListener{
 	//nombre maximal de lieux retournes
 	private final int nb_max_lieux = 20;//obtenus pour la plupart par l'API Google Places
 	private MarkerOptions[] places;
+	private MarkerOptions options = new MarkerOptions();
+	
 	
 	 //static final LatLng HAMBURG = new LatLng(53.558, 9.927);
 	 //static final LatLng KIEL = new LatLng(53.551, 9.993);
@@ -82,8 +84,31 @@ public void onCreate(Bundle savedInstanceState) {
 			if(theMap!=null){
 				//ok - proceed
 				theMap.setMapType(GoogleMap.MAP_TYPE_NORMAL); //on peut aussi mettre HYBRID, TERRAIN, ...
-				//update location
-		
+				theMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener()
+				{
+					@Override
+					public void onMapLongClick(LatLng point)
+					{
+						if(options==null)
+						{
+							options = new MarkerOptions()
+							.anchor(0.5f, 0.5f)
+							.position(point)
+							.title("Marker")
+							.draggable(true)
+							//.icon(BitmapDescriptorFactory
+							//		.fromResource(R.drawable.))
+							;
+							theMap.addMarker(options);
+						}
+						else{
+							options.position(point);
+							theMap.clear();
+							theMap.addMarker(options);
+						}
+						//new GetTask().execute(point);
+					}	
+				});
 				  /*Marker hamburg = theMap.addMarker(new MarkerOptions().position(HAMBURG)
 						  	                  .title("Hamburg"));
 						  	              Marker kiel = theMap.addMarker(new MarkerOptions()
@@ -94,7 +119,8 @@ public void onCreate(Bundle savedInstanceState) {
 						  	                      .fromResource(R.drawable.ic_launcher)));*/
 				
 				
-				
+				//mise a jour de la position de l'utilisateur et des points d'interets obtenus
+				//par les requetes places API
 				updatePlaces();
 			}
 		}
