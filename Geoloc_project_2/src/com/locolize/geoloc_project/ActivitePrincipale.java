@@ -61,6 +61,8 @@ public class ActivitePrincipale extends Activity implements LocationListener{
 	private final int nb_max_lieux = 20;//obtenus pour la plupart par l'API Google Places
 	private MarkerOptions[] places;
 	private MarkerOptions options = new MarkerOptions();
+	Marker marqueur_rdv_courant;
+	
 	
 	Utilisateur user = new Utilisateur();
 	
@@ -103,12 +105,12 @@ public void onCreate(Bundle savedInstanceState) {
 							//.icon(BitmapDescriptorFactory
 							//		.fromResource(R.drawable.))
 							;
-							theMap.addMarker(options);
+							marqueur_rdv_courant = theMap.addMarker(options);
 						}
 						else{
 							options.position(point);
 							//theMap.clear();
-							theMap.addMarker(options);
+							marqueur_rdv_courant = theMap.addMarker(options);
 						}
 						//new GetTask().execute(point);
 					}	
