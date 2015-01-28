@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.content.Intent;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -50,7 +51,7 @@ import android.view.Menu;
 
 public class ActivitePrincipale extends Activity implements LocationListener{
 
-	private int userIcon, foodIcon, drinkIcon, shopIcon, otherIcon;
+	private int userIcon, foodIcon, drinkIcon, shopIcon, otherIcon, friendIcon;
 	private GoogleMap theMap;
 	private LocationManager locMan;
 	private Marker userMarker;
@@ -60,6 +61,8 @@ public class ActivitePrincipale extends Activity implements LocationListener{
 	private final int nb_max_lieux = 20;//obtenus pour la plupart par l'API Google Places
 	private MarkerOptions[] places;
 	private MarkerOptions options = new MarkerOptions();
+	
+	Utilisateur user = new Utilisateur();
 	
 	
 	 //static final LatLng HAMBURG = new LatLng(53.558, 9.927);
@@ -76,6 +79,7 @@ public void onCreate(Bundle savedInstanceState) {
 		drinkIcon = R.drawable.blue_point;
 		shopIcon = R.drawable.green_point;
 		otherIcon = R.drawable.purple_point;
+		friendIcon = R.drawable.purple_point;
 
 		if(theMap==null){
 			//on "recupere" la carte
@@ -109,6 +113,23 @@ public void onCreate(Bundle savedInstanceState) {
 						//new GetTask().execute(point);
 					}	
 				});
+				
+				theMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+					
+					@Override
+					public boolean onMarkerClick(Marker arg0) {
+						// TODO Auto-generated method stub
+						/*On affiche une bulle dans la même fenetre qui contient un ou plusieurs boutons
+						 * 
+						 *
+						 */
+						return false;
+					}
+				});
+				
+				
+				
+				
 				  /*Marker hamburg = theMap.addMarker(new MarkerOptions().position(HAMBURG)
 						  	                  .title("Hamburg"));
 						  	              Marker kiel = theMap.addMarker(new MarkerOptions()
@@ -121,6 +142,7 @@ public void onCreate(Bundle savedInstanceState) {
 				
 				//mise a jour de la position de l'utilisateur et des points d'interets obtenus
 				//par les requetes places API
+				printContacts(user);
 				updatePlaces();
 			}
 		}
@@ -135,6 +157,8 @@ public void onCreate(Bundle savedInstanceState) {
 	  
 		  		Intent intent = new Intent(ActivitePrincipale.this, ContactsActivity.class);
 		  		startActivity(intent);
+		  		Utilisateur user=new Utilisateur(1);
+		  		user.test_client();
 	    		  
 	    		}
 	    	});
@@ -168,6 +192,13 @@ public void onStatusChanged(String provider, int status, Bundle extras) {
 	Log.v("ActivitePrincipale", "status changed");
 }
 
+public void printContacts(Utilisateur user){
+	for(Contact contact : user.close_contacts)
+	{
+		theMap.addMarker(contact.createMarker());
+	}
+}
+
 private void updatePlaces(){
 	//on obtient le gestionnaire de lieu "location manager"
 	locMan = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -178,25 +209,27 @@ private void updatePlaces(){
 	//creation d'un objet LatLng
 	LatLng lastLatLng = new LatLng(lat, lng);
 
+	user.position= lastLoc;
+	user.update_location();
 	//suppression de tous les marqueurs deja existants
 	if(userMarker!=null) userMarker.remove();
-	//create and set marker properties
+	//creation et initialisation des proprietes du marqueur de l'utilisateur
 	userMarker = theMap.addMarker(new MarkerOptions()
 	.position(lastLatLng)
 	.title("You are here")
 	.icon(BitmapDescriptorFactory.fromResource(userIcon))
 	.snippet("Your last recorded location"));
-	//move to location
+	//deplacement vers la position actuelle de l'utilisateur
 	theMap.animateCamera(CameraUpdateFactory.newLatLng(lastLatLng), 3000, null);
 	
-	//build places query string
+	//construction des strings des requetes de POI
 	String placesSearchStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
 			"json?location="+lat+","+lng+
 			"&radius=1000&sensor=true" +
 			"&types=food|bar|store|museum|art_gallery"+
 			"&key=AIzaSyDlg-eY0KiMruBtVXRcpiZRkD4qpmrn5C8";
 	
-	//execute query
+	//execution de la requete
 	new GetPlaces().execute(placesSearchStr);
 	
 	locMan.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 100, this);
@@ -205,33 +238,33 @@ private void updatePlaces(){
 private class GetPlaces extends AsyncTask<String, Void, String> {
 	@Override
 	protected String doInBackground(String... placesURL) {
-		//fetch places
+		//obtention des POI
 		
-		//build result as string
+		//construction du resultat en tant que string
 		StringBuilder placesBuilder = new StringBuilder();
 		//process search parameter string(s)
 		for (String placeSearchURL : placesURL) {
 			HttpClient placesClient = new DefaultHttpClient();
 			try {
-				//try to fetch the data
+				//essaie d'obtenir les donnees
 				
-				//HTTP Get receives URL string
+				//HTTP Get reçoit la string URL
 				HttpGet placesGet = new HttpGet(placeSearchURL);
-				//execute GET with Client - return response
+				//execution GET avec le Client - retour de la reponse
 				HttpResponse placesResponse = placesClient.execute(placesGet);
-				//check response status
+				//verification du statut de la reponse
 				StatusLine placeSearchStatus = placesResponse.getStatusLine();
-				//only carry on if response is OK
+				//on ne continue que si la reponse est positive
 				if (placeSearchStatus.getStatusCode() == 200) {
-					//get response entity
+					//obtention de l'entite de reponse
 					HttpEntity placesEntity = placesResponse.getEntity();
 					//get input stream setup
 					InputStream placesContent = placesEntity.getContent();
-					//create reader
+					//creation du lecteur
 					InputStreamReader placesInput = new InputStreamReader(placesContent);
-					//use buffered reader to process
+					//utilisation du lecteur bufferise pour traiter l'information
 					BufferedReader placesReader = new BufferedReader(placesInput);
-					//read a line at a time, append to string builder
+					//lecture ligne par ligne, append to string builder
 					String lineIn;
 					while ((lineIn = placesReader.readLine()) != null) {
 						placesBuilder.append(lineIn);
@@ -246,8 +279,8 @@ private class GetPlaces extends AsyncTask<String, Void, String> {
 	}
 	//process data retrieved from doInBackground
 	protected void onPostExecute(String result) {
-		//parse place data returned from Google Places
-		//remove existing markers
+		//analyse des des donnees de lieux retournes par l'API Google Places
+		//suppression des marqueurs existants
 		if(placeMarkers!=null){
 			for(int pm=0; pm<placeMarkers.length; pm++){
 				if(placeMarkers[pm]!=null)
@@ -257,11 +290,11 @@ private class GetPlaces extends AsyncTask<String, Void, String> {
 		try {
 			//parse JSON
 			
-			//create JSONObject, pass stinrg returned from doInBackground
+			//creation du JSONObject, pass string returned from doInBackground
 			JSONObject resultObject = new JSONObject(result);
-			//get "results" array
+			//obtention du tableau de resultats
 			JSONArray placesArray = resultObject.getJSONArray("results");
-			//marker options for each place returned
+			//les MarkerOptions de chaque lieu retournes
 			places = new MarkerOptions[placesArray.length()];
 			//on boucle sur les lieux
 			for (int p=0; p<placesArray.length(); p++) {
@@ -309,7 +342,7 @@ private class GetPlaces extends AsyncTask<String, Void, String> {
 					placeName = placeObject.getString("name");
 				}
 				catch(JSONException jse){
-					Log.v("PLACES", "missing value");
+					Log.v("PLACES", "missing value"); //on ecrit un message d'erreur dans la stacktrace si les infos d'un lieu sont incompletes
 					missingValue=true;
 					jse.printStackTrace();
 				}
