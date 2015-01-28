@@ -5,14 +5,19 @@ import android.location.Location;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 public class Contact {
 	public int id;
 	public int phone_number;
 	public String surname;
 	public String name;
+	public String pseudo;
 	public Location GPS_coordinates;
-	public Boolean visible;// je ne sais pas si le tri se fait � ce niveau ou plut�t sur le serveur
+	public Boolean visible;// je ne sais pas si le tri se fait à ce niveau ou plutôt sur le serveur
 	public Date last_connection;
+	//public Bitmap marqueurIcone; //l'icone du contact;
 	
 	public Contact(String new_name, String new_surname, int new_phone_number){
 		phone_number=new_phone_number;
@@ -52,8 +57,17 @@ public class Contact {
 		System.out.println("last_connection:" + last_connection + System.getProperty("line.separator"));
 	}
 	
-	public void print_on_screen(){
+	//cette méthode permet de creer un marqueur à la position du contact
+	//ensuite on va faire un theMap.addMarker(createMarker(Contact contact));
+	public MarkerOptions createMarker(){
+		double lat = this.GPS_coordinates.getLatitude();
+		double lng = this.GPS_coordinates.getLongitude();
+		LatLng latlng = new LatLng(lat,lng);
+		MarkerOptions options = new MarkerOptions()
+					.title(this.pseudo)
+					.position(latlng)
+					;
+		return options;
 	}
 	
-}
-	
+}	
