@@ -208,6 +208,10 @@ public class Utilisateur extends Activity {
   	        }    	    
   	}
   
+  public void addEvents(){
+	  
+  }
+  
   public void add_all_phone_contacts_to_database(){
   	Log.d("Insert: ", "Inserting all the contacts ..");
   	Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
