@@ -15,12 +15,13 @@ public class Client {
     public static final String SERVERIP = "89.88.112.126"; //your computer IP address
 	//public static final String SERVERIP = "89.156.23.227";
 	//public static final int SERVERPORT = 6767;
-	public static final int SERVERPORT = 7676;
+	public static final int SERVERPORT = 6767;
     //private OnMessageReceived mMessageListener = null;
     //private boolean mRun = false;
     public ArrayList<String> message_to_send;
 	public ArrayList<String> message_received;
-	
+	private boolean mRun = false;
+	public String outMessage;
 	
     PrintWriter out;
     BufferedReader in;
@@ -54,39 +55,70 @@ public class Client {
     	            //create a socket to make the connection with the server
     	            Socket socket = new Socket(serverAddr, SERVERPORT);
     	            System.out.println("after socket");
-    		        
+    	            
     		        
     			    try{
     		    	// nouveau try ici ???
     		            //send the message to the server
     		            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-    					 //receive the message which the server sends back
-    					in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     					
     		            Log.e("TCP Client", "C: Sent."); 
     		            Log.e("TCP Client", "C: Done.");
-    		            String outMessage="";
     		            
+    		           String previous="";
     		           for (String line : message_to_send) {
     		        	   	System.out.println("line to send is: " + line);
-    		            	outMessage=outMessage+line+System.getProperty("line.separator");
+    		            	outMessage=previous+line+System.getProperty("line.separator");
+    		            	previous=outMessage;
+    		        	   	
     		            	}
     		            System.out.println("message to send is: ");
     		            System.out.println(outMessage);
     		            
-    		            
-    		            out.write(outMessage);
-    		            out.flush();
+    		            if (out != null && !out.checkError()) {
+    		                out.write(outMessage);
+    		                out.flush();
+    		            }
     		
     		            Log.i("TcpClient", "sent: " + outMessage);
     		
     		            //accept server response
-    		            String inMessage = in.readLine();
+    		            mRun = true;
+   					 //receive the message which the server sends back
+    		            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    		            System.out.println("point 1");
+    		            //String inMessage;
+    		            message_received = new ArrayList<String>();
+    		            while (mRun) {
+    		            	System.out.println("point 2");
+    		            	String inMessage = in.readLine();
+    		            	System.out.println(in.readLine());
+    		            	System.out.println("point 3");
+    	 
+    	                    if (inMessage != null &&  inMessage != "end") {
+    	                    	System.out.println("point 4");
+    	                    	System.out.println(inMessage);
+
+    	                    	message_received.add(inMessage);
+    	                    	System.out.println("point 5");
+    	                    	Log.i("TcpClient", "received: " + inMessage + System.getProperty("line.separator"));
+    	                    }
+    	                    if (inMessage == "end") {
+    	                    	mRun=false;
+    	                    	System.out.println("point 6");
+    	                    	System.out.println("end received");
+    	                    	
+    	                    }
+    	                    //inMessage = null;
+    	 
+    	                }
+    		            
+    		            /*String inMessage = in.readLine();
     		            message_received.add(inMessage);                
     		            System.out.println("message receive is: ");
-    		            System.out.println(inMessage);
+    		            System.out.println(inMessage);*/
     		
-    		            Log.i("TcpClient", "received: " + inMessage + System.getProperty("line.separator"));
+    		            
     		
     		            //close connection
     		            socket.close();
@@ -192,3 +224,5 @@ public class Client {
     
     
 }
+        
+        
