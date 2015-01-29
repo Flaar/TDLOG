@@ -2,6 +2,7 @@ package com.locolize.geoloc_project;
 
 import android.view.View.OnClickListener;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -46,6 +47,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.content.Context;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Menu;
 
@@ -64,7 +66,7 @@ public class ActivitePrincipale extends Activity implements LocationListener{
 	Marker marqueur_rdv_courant;
 	
 	
-	Utilisateur user = new Utilisateur();
+	//Utilisateur user = new Utilisateur();
 	
 	
 	 //static final LatLng HAMBURG = new LatLng(53.558, 9.927);
@@ -75,14 +77,14 @@ public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    
 	    setContentView(R.layout.activity_activite_principale);
-
-		userIcon = R.drawable.yellow_point;
+	    
+	    userIcon = R.drawable.yellow_point;
 		foodIcon = R.drawable.red_point;
 		drinkIcon = R.drawable.blue_point;
 		shopIcon = R.drawable.green_point;
 		otherIcon = R.drawable.purple_point;
 		friendIcon = R.drawable.purple_point;
-
+		
 		if(theMap==null){
 			//on "recupere" la carte
 			theMap = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
@@ -115,36 +117,28 @@ public void onCreate(Bundle savedInstanceState) {
 						//new GetTask().execute(point);
 					}	
 				});
-				
+				/*
 				theMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 					
 					@Override
 					public boolean onMarkerClick(Marker arg0) {
 						// TODO Auto-generated method stub
-						/*On affiche une bulle dans la même fenetre qui contient un ou plusieurs boutons
-						 * 
-						 *
-						 */
+						//On affiche une bulle dans la même fenetre qui contient un ou plusieurs boutons
 						return false;
 					}
 				});
+				*/
 				
 				
 				
 				
-				  /*Marker hamburg = theMap.addMarker(new MarkerOptions().position(HAMBURG)
-						  	                  .title("Hamburg"));
-						  	              Marker kiel = theMap.addMarker(new MarkerOptions()
-						  	                  .position(KIEL)
-						  	                  .title("Kiel")
-						  	                  .snippet("Kiel is cool")
-						  	                  .icon(BitmapDescriptorFactory
-						  	                      .fromResource(R.drawable.ic_launcher)));*/
+				  
 				
+
+				//printContacts(user);
 				
 				//mise a jour de la position de l'utilisateur et des points d'interets obtenus
 				//par les requetes places API
-				printContacts(user);
 				updatePlaces();
 			}
 		}
@@ -159,9 +153,10 @@ public void onCreate(Bundle savedInstanceState) {
 	  
 		  		Intent intent = new Intent(ActivitePrincipale.this, ContactsActivity.class);
 		  		startActivity(intent);
-		  		Utilisateur user=new Utilisateur(1);
-		  		user.test_client();
-	    		  
+		  		Utilisateur user=new Utilisateur("Robert Moule","le mollusque",0604452320);
+		  		//user.test_requete(); // marche
+		  		//user.update_close_contact_list();// ne marche pas 
+	    		//
 	    		}
 	    	});
 	   
@@ -193,13 +188,13 @@ public void onProviderEnabled(String provider) {
 public void onStatusChanged(String provider, int status, Bundle extras) {
 	Log.v("ActivitePrincipale", "status changed");
 }
-
+/*
 public void printContacts(Utilisateur user){
 	for(Contact contact : user.close_contacts)
 	{
 		theMap.addMarker(contact.createMarker());
 	}
-}
+}*/
 
 private void updatePlaces(){
 	//on obtient le gestionnaire de lieu "location manager"
@@ -211,8 +206,8 @@ private void updatePlaces(){
 	//creation d'un objet LatLng
 	LatLng lastLatLng = new LatLng(lat, lng);
 
-	user.position= lastLoc;
-	user.update_location();
+	//user.position= lastLoc;
+	//user.update_location();
 	//suppression de tous les marqueurs deja existants
 	if(userMarker!=null) userMarker.remove();
 	//creation et initialisation des proprietes du marqueur de l'utilisateur
