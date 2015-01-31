@@ -2171,7 +2171,9 @@ containing a value of this type.
         public static final int activite_principale=0x7f0c0000;
     }
     public static final class string {
+        public static final int CHOIXOPTIONS=0x7f06003a;
         public static final int ContactsActivity=0x7f060037;
+        public static final int OK=0x7f060039;
         public static final int OptionsActivity=0x7f060036;
         public static final int UTILISATEUR=0x7f060038;
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 

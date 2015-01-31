@@ -5,12 +5,13 @@ package com.locolize.geoloc_project;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.location.Location;
 import android.provider.ContactsContract;
 import android.app.Activity;
 import android.database.Cursor;
 //import android.location.Location;
 import android.util.Log;
-//ATTENTION rajouter  <uses-permission android:name="android.permission.READ_CONTACTS" /> dans les authorisations
+//ATTENTION rajouter  <uses-permission android:name="android.permission.READ_CONTACTS" /> dans les autorisations
 public class Utilisateur extends Activity {
 	// Cette classe correspond à l'utilisateur, elle permet la création d'un compte sur l'appli
 	// l'enregistrement des contacts du téléphone dans le serveur
@@ -40,6 +41,7 @@ public class Utilisateur extends Activity {
 	public String surname;
 	public int phone_number;
 	public int client_id;
+	public Location position;
 	public Boolean visible;
 	public Boolean parameter_1;
 	public Boolean parameter_2;
@@ -51,8 +53,12 @@ public class Utilisateur extends Activity {
 	private ArrayList<String> message_to_send;
 	private ArrayList<String> message_received;
 	
-	public Utilisateur(){
-		contacts = database.getAllContacts();
+	public Utilisateur(String this_name, String this_surname, int this_phone_number){
+		client_id=5;
+		name=this_name;
+		surname=this_surname;
+		phone_number=this_phone_number;
+		//contacts = database.getAllContacts();
 		Log.d("Reading: ", "Reading all contacts..");
 		//envoyer ces contacts au serveur !!!
 		message_to_send = new ArrayList<String>();
@@ -60,10 +66,16 @@ public class Utilisateur extends Activity {
 		message_to_send.add(name);
 		message_to_send.add(surname);
 		message_to_send.add(Integer.toString(phone_number));
+		System.out.println("juste avant l'envoi client");
 		// et client id ??
 		myClient = new Client(message_to_send);// constructeur, client donne l'adresse IP, les principaux paramètres
-		message_received=myClient.run();// fonction run prend l'array liste en entrée, l'envoie et attend la réponse 
-		 // qu'il met sous forme d'array liste également
+		message_received=myClient.get_message_received();// fonction run prend l'array liste en entrée, l'envoie et attend la réponse 
+		System.out.println(message_received); // qu'il met sous forme d'array liste également
+	}
+	
+	public Utilisateur(int this_id){
+		client_id=this_id;
+		
 	}
 	
 	public void update_close_contact_list(){
@@ -161,14 +173,23 @@ public class Utilisateur extends Activity {
 		 //ArrayList<String> message_received = new ArrayList<String>();// crée un array vide que la classe Client va remplir après appel au serveur
 		 message_to_send.add(0,Integer.toString(client_id));// on ajoute en première ligne l'id du clien..
 		 myClient = new Client(message_to_send);// constructeur, client donne l'adresse IP, les principaux paramètres
-		 message_received=myClient.run();// fonction run prend l'array liste en entrée, l'envoie et attend la réponse 
+		 message_received=myClient.get_message_received();// fonction run prend l'array liste en entrée, l'envoie et attend la réponse 
 		 // qu'il met sous forme d'array liste également
+	}
+	
+	public void test_requete(){
+		message_to_send = new ArrayList<String>();
+		message_to_send.add("whoAmI");
+		send_receive();
+		System.out.println(message_received);		
 	}
 	
 	public void test_client(){
 		message_to_send = new ArrayList<String>();
-		message_to_send.add("tu peux pas testcouf");
-		send_receive();
+		message_to_send.add("testcouf");
+		message_to_send.add("c'est pas ouf");
+		myClient = new Client(message_to_send);// constructeur, client donne l'adresse IP, les principaux paramètres
+		message_received=myClient.get_message_received();
 		System.out.println(message_received);		
 	}
 	
@@ -199,6 +220,10 @@ public class Utilisateur extends Activity {
   	        Log.d("Name: ", log);
   	        }    	    
   	}
+  
+  public void addEvents(){
+	  
+  }
   
   public void add_all_phone_contacts_to_database(){
   	Log.d("Insert: ", "Inserting all the contacts ..");

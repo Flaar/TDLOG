@@ -549,7 +549,9 @@ int layout contactslayout 0x7f030018
 int layout optionslayout 0x7f030019
 int layout support_simple_spinner_dropdown_item 0x7f03001a
 int menu activite_principale 0x7f0c0000
+int string CHOIXOPTIONS 0x7f06003a
 int string ContactsActivity 0x7f060037
+int string OK 0x7f060039
 int string OptionsActivity 0x7f060036
 int string UTILISATEUR 0x7f060038
 int string abc_action_bar_home_description 0x7f060024

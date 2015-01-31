@@ -7,5 +7,7 @@
     <string name="OptionsActivity">Options</string>
     <string name="ContactsActivity">Contacts</string>
     <string name="UTILISATEUR">Utilisateur</string>
+    <string name="OK"> OK </string>
+    <string name="CHOIXOPTIONS"> Choisissez vos options </string>
 
 </resources>

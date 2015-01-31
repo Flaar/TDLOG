@@ -8,7 +8,7 @@
     android:id="@+id/choixoptions"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:text="Choisissez les options que vous désirez" />
+    android:text="@string/CHOIXOPTIONS" />
 
     
     <ListView
@@ -23,6 +23,6 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
-      android:text="OK" />
+      android:text="@string/OK" />
 
 </LinearLayout>
