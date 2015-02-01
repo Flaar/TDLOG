@@ -5,6 +5,8 @@ package com.locolize.geoloc_project;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.gms.maps.GoogleMap;
+
 import android.location.Location;
 import android.provider.ContactsContract;
 import android.app.Activity;
@@ -12,7 +14,7 @@ import android.database.Cursor;
 //import android.location.Location;
 import android.util.Log;
 //ATTENTION rajouter  <uses-permission android:name="android.permission.READ_CONTACTS" /> dans les autorisations
-public class Utilisateur extends Activity {
+public class Utilisateur extends Activity {//implements LPOI {
 	// Cette classe correspond à l'utilisateur, elle permet la création d'un compte sur l'appli
 	// l'enregistrement des contacts du téléphone dans le serveur
 	// l'ajout de contacts (ajout à la base de donnée SQLITE) et la récupération de tous les contacts du téléphone 
@@ -55,6 +57,15 @@ public class Utilisateur extends Activity {
 	private ArrayList<String> message_received;
 	
 	public Utilisateur(){
+		name= "NewUser";
+		pseudo= "NewUser";
+	}
+	
+	public Utilisateur(String this_name, String this_surname, int this_phone_number){
+		client_id=5;
+		name=this_name;
+		surname=this_surname;
+		phone_number=this_phone_number;
 		//contacts = database.getAllContacts();
 		Log.d("Reading: ", "Reading all contacts..");
 		//envoyer ces contacts au serveur !!!
@@ -63,15 +74,15 @@ public class Utilisateur extends Activity {
 		message_to_send.add(name);
 		message_to_send.add(surname);
 		message_to_send.add(Integer.toString(phone_number));
+		System.out.println("juste avant l'envoi client");
 		// et client id ??
 		myClient = new Client(message_to_send);// constructeur, client donne l'adresse IP, les principaux paramètres
 		message_received=myClient.get_message_received();// fonction run prend l'array liste en entrée, l'envoie et attend la réponse 
-		 // qu'il met sous forme d'array liste également
+		System.out.println(message_received); // qu'il met sous forme d'array liste également
 	}
 	
 	public Utilisateur(int this_id){
 		client_id=this_id;
-		
 	}
 	
 	public void update_close_contact_list(){
@@ -97,8 +108,8 @@ public class Utilisateur extends Activity {
 				double Latitude=Double.parseDouble(message_received.get(compteur+5));
 				//String sLongitude=Location.convert(Longitude, Location.FORMAT_SECONDS);
 				//String sLatitude=Location.convert(Latitude, Location.FORMAT_SECONDS);
-				contact.GPS_coordinates.setLatitude(Latitude);
-				contact.GPS_coordinates.setLatitude(Longitude);
+				contact.position.setLatitude(Latitude);
+				contact.position.setLatitude(Longitude);
 				
 				close_contacts.add(contact);
 					
@@ -133,8 +144,8 @@ public class Utilisateur extends Activity {
 				double Latitude=Double.parseDouble(message_received.get(compteur+4));
 				//String sLongitude=Location.convert(Longitude, Location.FORMAT_SECONDS);
 				//String sLatitude=Location.convert(Latitude, Location.FORMAT_SECONDS);
-				event.GPS_coordinates.setLatitude(Latitude);
-				event.GPS_coordinates.setLatitude(Longitude);
+				event.position.setLatitude(Latitude);
+				event.position.setLatitude(Longitude);
 				event.description=message_received.get(compteur+5);
 				event.public_event=Boolean.valueOf(message_received.get(compteur+6));
 				//event.contacts_invited co
@@ -173,10 +184,19 @@ public class Utilisateur extends Activity {
 		 // qu'il met sous forme d'array liste également
 	}
 	
+	public void test_requete(){
+		message_to_send = new ArrayList<String>();
+		message_to_send.add("whoAmI");
+		send_receive();
+		System.out.println(message_received);		
+	}
+	
 	public void test_client(){
 		message_to_send = new ArrayList<String>();
-		message_to_send.add("tu peux pas testcouf");
-		send_receive();
+		message_to_send.add("testcouf");
+		message_to_send.add("c'est pas ouf");
+		myClient = new Client(message_to_send);// constructeur, client donne l'adresse IP, les principaux paramètres
+		message_received=myClient.get_message_received();
 		System.out.println(message_received);		
 	}
 	
@@ -234,5 +254,19 @@ public class Utilisateur extends Activity {
   public void putMessage(Contact contact, String message_to_send){
   	database.updateMessage (message_to_send,contact);
   }
+  
+  
+  public void printContacts(GoogleMap theMap){
+		for(Contact contact : this.close_contacts)
+		{theMap.addMarker(contact.createMarker());}
+	}
+  
+  
+  //*************************ACCESSEURS ET MUTATEURS******************************************************
+  public void setName(String nom){this.name=nom;}
+  public void setSurname(String prenom){this.surname=prenom;}
+  public void setPseudo(String alias){this.pseudo=alias;}
+  public void setNumber(int numero){this.phone_number=numero;}
+  public void setLocation(Location pos){this.position=pos;}
   
 	}
