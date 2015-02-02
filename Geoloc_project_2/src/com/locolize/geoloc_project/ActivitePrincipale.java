@@ -86,6 +86,7 @@ public void onCreate(Bundle savedInstanceState) {
 		friendIcon = R.drawable.purple_point;
 		
 		ArrayList<Contact> contacts_tab = new ArrayList<Contact>(0);
+		ArrayList<Event> events_tab = new ArrayList<Event>(0);
 		Utilisateur user = new Utilisateur();
 		double lat1 = 48.853;
 		double lon1 = 2.35; //Notre Dame de Paris
@@ -97,7 +98,7 @@ public void onCreate(Bundle savedInstanceState) {
 		Contact c1 = new Contact(); 
 		//Contact c2 = new Contact();
 		//user.close_contacts.add(c2);
-		LatLng LaLo = new LatLng(lat1,lon1);
+		//LatLng LaLo = new LatLng(lat1,lon1);
 		//c1.setLatLng(LaLo);
 		//c1.position.setLatitude(lat1);
 		//c1.position.setLongitude(lon1);
@@ -106,8 +107,12 @@ public void onCreate(Bundle savedInstanceState) {
 		c1.visible=true;
 		//c2.position.setLatitude(lat2); c2.position.setLongitude(lon2); c2.pseudo="Carrousel du Louvre";
 		//Contact c3 = new Contact(); c3.position.setLatitude(lat3); c3.position.setLongitude(lon3); c3.pseudo="Tour Eiffel";
-		//user.name = "alpha";
+		
+		Event e1 = new Event();
+		e1.latlng = new LatLng(lat2,lon2);
+		
 		user.close_contacts = contacts_tab;
+		user.close_events = events_tab;
 		user.close_contacts.add(c1);
 		//user.close_contacts.add(c2);
 		//user.close_contacts.add(c3);
@@ -146,6 +151,8 @@ public void onCreate(Bundle savedInstanceState) {
 						addMarker = false;
 						//lancer activité partager à : avec des checkboxes
 						//
+						Intent intent3 = new Intent(ActivitePrincipale.this, PartageRDV.class);
+				  		startActivity(intent3);
 						}
 						
 					}	
