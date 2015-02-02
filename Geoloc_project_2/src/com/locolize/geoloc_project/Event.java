@@ -5,10 +5,10 @@ import java.util.ArrayList;
 //import java.util.Calendar;
 import java.util.Date;
 
-public class Event {
-	public int id;
-	public String name;
-	public Location position;
+public class Event extends LPOI{
+	//public int id;
+	//public String name;
+	//public Location position;
 	public String description;
 	public Contact owner;
 	public ArrayList<Contact> contacts_invited;	
