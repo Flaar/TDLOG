@@ -59,25 +59,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         
     // Adding new contact
     void addContact(Contact contact) {
+    	System.out.println("before writable");
         SQLiteDatabase db = this.getWritableDatabase();
- 
+        System.out.println("after writable");
         ContentValues values = new ContentValues();
+        System.out.println("after values");
         values.put(KEY_NAME, contact.name); // Contact Name
         values.put(KEY_SURNAME, contact.surname); 
-        values.put(KEY_PH_NO, contact.phone_number); // Contact Phone
+        values.put(KEY_PH_NO, Integer.toString(contact.phone_number)); // Contact Phone
         values.put(KEY_MESSAGE, "");
+        System.out.println("after setting");
         // Inserting Row
         db.insert(TABLE_CONTACTS, null, values);
+        System.out.println("after insert");
         db.close(); // Closing database connection
+        System.out.println("after close");
     }
  
     // Getting single contact
     Contact getContact(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
  
-        Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID,
-                KEY_NAME, KEY_SURNAME, KEY_PH_NO, KEY_MESSAGE }, KEY_ID + "=?",
-                new String[] { String.valueOf(id) }, null, null, null, null);// rajouter 2 null ?? parce que j'ai ajouté surname et message ??
+        Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID, KEY_NAME, KEY_SURNAME, KEY_PH_NO, KEY_MESSAGE }, KEY_ID + "=?", new String[] { String.valueOf(id) }, null, null, null, null);// rajouter 2 null ?? parce que j'ai ajouté surname et message ??
         if (cursor != null)
             cursor.moveToFirst();
  

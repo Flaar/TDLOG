@@ -16,7 +16,7 @@ public class Contact extends LPOI{
 	public String pseudo;
 	//public Location position;
 	//public LatLng latlng;
-	public Boolean visible;// je ne sais pas si le tri se fait Ã  ce niveau ou plutÃ´t sur le serveur
+	public Boolean visible;// je ne sais pas si le tri se fait à ce niveau ou plutôt sur le serveur
 	public Date last_connection;
 	//public Bitmap marqueurIcone; //l'icone du contact;
 	
@@ -56,7 +56,7 @@ public class Contact extends LPOI{
 		System.out.println("last_connection:" + last_connection + System.getProperty("line.separator"));
 	}
 	
-	//cette mÃ©thode permet de creer un marqueur Ã  la position du contact
+	//cette méthode permet de creer un marqueur à la position du contact
 	//ensuite on va faire un theMap.addMarker(createMarker(Contact contact));
 	public MarkerOptions createMarker(){
 		//double lat = this.position.getLatitude();

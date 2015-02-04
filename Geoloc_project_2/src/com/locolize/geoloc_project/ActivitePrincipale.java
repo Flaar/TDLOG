@@ -1,30 +1,10 @@
 package com.locolize.geoloc_project;
 
-import android.view.View.OnClickListener;
-import android.app.Activity;
-import android.app.PendingIntent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
-import android.content.Intent;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import android.location.Location;
-import android.location.LocationManager;
-import android.content.Context;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.math.*;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -36,6 +16,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -43,15 +37,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.AsyncTask;
-import android.content.Context;
-import android.telephony.SmsManager;
-import android.util.Log;
-import android.view.Menu;
 
 public class ActivitePrincipale extends Activity implements LocationListener{
 
@@ -149,7 +134,7 @@ public void onCreate(Bundle savedInstanceState) {
 						}
 						//new GetTask().execute(point);
 						addMarker = false;
-						//lancer activitÃ© partager Ã  : avec des checkboxes
+						//lancer activité partager à : avec des checkboxes
 						//
 						Intent intent3 = new Intent(ActivitePrincipale.this, PartageRDV.class);
 				  		startActivity(intent3);
@@ -164,7 +149,7 @@ public void onCreate(Bundle savedInstanceState) {
 					@Override
 					public boolean onMarkerClick(Marker arg0) {
 						// TODO Auto-generated method stub
-						//On affiche une bulle dans la mÃªme fenetre qui contient un ou plusieurs boutons
+						//On affiche une bulle dans la même fenetre qui contient un ou plusieurs boutons
 						
 						return false;
 					}
@@ -195,10 +180,24 @@ public void onCreate(Bundle savedInstanceState) {
 	  
 		  		Intent intent = new Intent(ActivitePrincipale.this, ContactsActivity.class);
 		  		startActivity(intent);
-		  		Utilisateur user=new Utilisateur("Robert Moule","le mollusque",0604452320);
+		  		//Utilisateur user=new Utilisateur("Ruppert","le mecha shark", 5782934);
 		  		//user.test_requete(); // marche
 		  		//user.update_close_contact_list();// ne marche pas 
-	    		//
+		  		Utilisateur user=new Utilisateur(1);
+		  		//user.update_close_contact_list();
+		  		//user.print_close_contact_list();
+		  		
+		  		
+		  		locMan = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		  		//obtention de la dernier position
+		  		Location lastLoc = locMan.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		  		double lat = lastLoc.getLatitude();
+		  		double lng = lastLoc.getLongitude();
+		  		//creation d'un objet LatLng
+		  		LatLng lastLatLng = new LatLng(lat, lng);
+
+		  		user.position= lastLoc;
+		  		user.update_location();
 	    		}
 	    	});
 	   
@@ -214,7 +213,7 @@ public void onCreate(Bundle savedInstanceState) {
 	    addMarkerButton.setOnClickListener(new OnClickListener(){
 	    	@Override
 	    	public void onClick(View v){
-	    		//Mettre Ã  un l'ajout de marqueur;
+	    		//Mettre à un l'ajout de marqueur;
 			    addMarker=true;
 	    		
 	    		//Afficher un toast
@@ -293,7 +292,7 @@ private class GetPlaces extends AsyncTask<String, Void, String> {
 			try {
 				//essaie d'obtenir les donnees
 				
-				//HTTP Get reÃ§oit la string URL
+				//HTTP Get reçoit la string URL
 				HttpGet placesGet = new HttpGet(placeSearchURL);
 				//execution GET avec le Client - retour de la reponse
 				HttpResponse placesResponse = placesClient.execute(placesGet);
