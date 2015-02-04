@@ -6,7 +6,7 @@ import socket
 import socketserver
 import sys
 import threading
-import evenements
+#import evenements
 import contacts
 import utilisateur
 
@@ -81,26 +81,16 @@ class traitementRequete(socketserver.StreamRequestHandler):
             for compteur in range(nombreInvites):
                 invitesId.append(int(self.rfile.readline().strip().decode('utf_8')))
             public=bool(self.rfile.readline().strip().decode('utf_8'))
-            traitement=evenements.nouveau(timestampDebut, timestampFin, positionGPS, texte, invitesId, public)
+            traitement=evenements.nouveau(clientId, titre, timestampDebut, timestampFin, positionX, positionY, texte, invitesId, public)
             
-        elif requeteId=='positionEvenementsPublics':
+        elif requeteId=='positionEvenements':
             evenement=evenements.bddEvenements()
-            rayon=float(self.rfile.readline().strip().decode('utf_8'))
-            traitement=evenements.position(clientId, rayon) #classe appropriée encore a écrire
+            traitement=evenements.position(clientId)
             
         elif requeteId=='joindreEvenement':
             evenement=evenements.bddEvenements()
             evenementId=int(self.rfile.readline().strip().decode('utf_8'))
             traitement=evenements.joindre(clientId, evenementId)
-            
-        elif requeteId=='inviterEvenement':
-            evenement=evenements.bddEvenements()
-            evenementId=int(self.rfile.readline().strip().decode('utf_8'))
-            nombreInvites=int(self.rfile.readline().strip().decode('utf_8'))
-            invitesId=[]
-            for compteur in range(nombreInvites):
-                invitesId.append(int(self.rfile.readline().strip().decode('utf_8')))
-            traitement=evenements.ajouterInvites(evenementId, invitesId)
             
 
 #requètes sur les modules complémentaires
@@ -115,7 +105,7 @@ class traitementRequete(socketserver.StreamRequestHandler):
             traitement='ERREUR : requete incomplete ou mal identifiee'
 
 
-        self.wfile.write(bytes(traitement+'\nend \n','utf_8'))
+        self.wfile.write(bytes(traitement+'\nend\n','utf_8'))
 
 
 #Classe implémentant le serveur TCP qui permet les échanges mis en place par la classe précédente. Ce serveur est threadé (et peut être aussi forké si on a un serveur multicoeur) afin de permettre de traiter plusieurs requètes simultanées)

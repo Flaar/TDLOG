@@ -5,7 +5,7 @@ import sys
 import time
 
 #La classe repertoire_final  utilise la table SQL définie par ces contraintes :
-#CREATE TABLE repertoire_final  (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, telephone VARCHAR(12), nom VARCHAR(255), prenom VARCHAR(255), positionX FLOAT, positionY FLOAT, datePosition DATE, tempsPosition TIME, contactsIds TEXT,CONSTRAINT numero_unique UNIQUE (telephone) )
+#CREATE TABLE repertoire_final  (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, telephone VARCHAR(12), nom VARCHAR(255), prenom VARCHAR(255), positionX FLOAT, positionY FLOAT, datePosition DATE, tempsPosition TIME, contactsIds TEXT, eventsIds TEXT,CONSTRAINT numero_unique UNIQUE (telephone) )
 
 def split(chaine):
     liste=chaine.split()
@@ -112,7 +112,7 @@ class bddContacts:
             query="SELECT nom, prenom, telephone FROM repertoire_final WHERE id="+str(contactsProchesIds[compteur])
             self.curseur.execute(query)
             contact=self.curseur.fetchone()
-            reponse=reponse+str(contactsProchesIds[compteur])+'\n'+str(contact[0])+'\n'+str(contact[1])+'\n'+str(contact[2])+'\n'+str(contactsPositionsX[compteur])+'\n'+str(contactsPositionsY[compteur])'
+            reponse=reponse+str(contactsProchesIds[compteur])+'\n'+str(contact[0])+'\n'+str(contact[1])+'\n'+str(contact[2])+'\n'+str(contactsPositionsX[compteur])+'\n'+str(contactsPositionsY[compteur])
         self.connexion.close()
         return reponse
 
