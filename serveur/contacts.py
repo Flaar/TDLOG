@@ -38,7 +38,7 @@ class bddContacts:
     
     def __init__(self):
         self.logs=''
-        self.connexion=mysql.connector.connect(user='tdlog', password='projetdumythe', database='contacts', host='localhost');
+        self.connexion=mysql.connector.connect(user='tdlog', database='contacts', host='localhost');
         self.curseur=self.connexion.cursor()
 
     def actualiseListe(self, clientId, contactsNums):
@@ -79,7 +79,7 @@ class bddContacts:
             query="SELECT nom, prenom, telephone FROM repertoire_final WHERE id="+str(contactsIds[compteur])
             self.curseur.execute(query)
             contact=self.curseur.fetchone()
-            reponse=reponse+str(contactsIds[compteur])+'\n'+contact[0]+'\n'+contact[1]+'\n'+contact[2]+'\n'
+            reponse=reponse+str(contactsIds[compteur])+'\n'+contact[0]+'\n'+contact[1]+'\n'+contact[2]
         self.connexion.commit()
         self.connexion.close()
         return reponse
@@ -112,7 +112,7 @@ class bddContacts:
             query="SELECT nom, prenom, telephone FROM repertoire_final WHERE id="+str(contactsProchesIds[compteur])
             self.curseur.execute(query)
             contact=self.curseur.fetchone()
-            reponse=reponse+str(contactsProchesIds[compteur])+'\n'+str(contact[0])+'\n'+str(contact[1])+'\n'+str(contact[2])+'\n'+str(contactsPositionsX[compteur])+'\n'+str(contactsPositionsY[compteur])+'\n'
+            reponse=reponse+str(contactsProchesIds[compteur])+'\n'+str(contact[0])+'\n'+str(contact[1])+'\n'+str(contact[2])+'\n'+str(contactsPositionsX[compteur])+'\n'+str(contactsPositionsY[compteur])'
         self.connexion.close()
         return reponse
 

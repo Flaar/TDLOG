@@ -72,7 +72,8 @@ class traitementRequete(socketserver.StreamRequestHandler):
             evenement=evenements.bddEvenements()
             timestampDebut=self.rfile.readline().strip().decode('utf_8')
             timestampFin=self.rfile.readline().strip().decode('utf_8')
-            positionGPS=self.rfile.readline().strip().decode('utf_8')
+            positionX=self.rfile.readline().strip().decode('utf_8')
+            positionY=self.rfile.readline().strip().decode('utf_8')
             longueurTexte=int(self.rfile.readline().strip()).decode('utf_8')
             texte=self.rfile.readline(longueurTexte).strip().decode('utf_8')
             nombreInvites=int(self.rfile.readline().strip()).decode('utf_8')
@@ -80,7 +81,7 @@ class traitementRequete(socketserver.StreamRequestHandler):
             for compteur in range(nombreInvites):
                 invitesId.append(int(self.rfile.readline().strip().decode('utf_8')))
             public=bool(self.rfile.readline().strip().decode('utf_8'))
-            traitement=evenements.creer(timestampDebut, timestampFin, positionGPS, texte, invitesId, public)
+            traitement=evenements.nouveau(timestampDebut, timestampFin, positionGPS, texte, invitesId, public)
             
         elif requeteId=='positionEvenementsPublics':
             evenement=evenements.bddEvenements()
@@ -114,7 +115,7 @@ class traitementRequete(socketserver.StreamRequestHandler):
             traitement='ERREUR : requete incomplete ou mal identifiee'
 
 
-        self.wfile.write(bytes(traitement,'utf_8'))
+        self.wfile.write(bytes(traitement+'\nend \n','utf_8'))
 
 
 #Classe implémentant le serveur TCP qui permet les échanges mis en place par la classe précédente. Ce serveur est threadé (et peut être aussi forké si on a un serveur multicoeur) afin de permettre de traiter plusieurs requètes simultanées)

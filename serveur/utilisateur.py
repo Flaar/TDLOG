@@ -7,17 +7,16 @@ class bddUtilisateur:
 
     def __init__(self):
         self.logs=''
-        self.connexion=mysql.connector.connect(user='tdlog', password='projetdumythe', database='contacts', host='localhost')
+        self.connexion=mysql.connector.connect(user='tdlog', database='contacts', host='localhost')
         self.curseur=self.connexion.cursor()
 
     def nouveau(self, nom, prenom, telephone):
         query="INSERT INTO repertoire_final (nom, prenom, telephone, positionX, positionY, tempsPosition, datePosition, contactsIds) VALUES ('"+nom+"', '"+prenom+"', '"+telephone+"', 0, 0, NOW(), NOW(), '')"
         self.curseur.execute(query)
-        query="SELECT id from repertoire_final WHERE (nom, prenom) = ('"+nom+"', '"+prenom+"')"
+        self.connexion.commit()
+        query="SELECT id from repertoire_final WHERE telephone = '"+telephone+"'"
         self.curseur.execute(query)
         clientId=int(self.curseur.fetchone()[0])
-        query="UPDATE repertoire_final SET contactsId = '"+str(clientId)+"' WHERE id ="+str(clientId)
-        self.connexion.commit()
         self.connexion.close()
         return 'nouveauClientOk'+'\n'+str(clientId)
 
