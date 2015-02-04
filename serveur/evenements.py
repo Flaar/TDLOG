@@ -42,7 +42,18 @@ class bddEvenements:
         eventId=int(self.curseur.fetchone()[0])
         self.connexion.commit()
         self.connexion.close()
-        return '2\n'+'nouvelEvenementOk'+'\n'+str(eventId)
+        invitesIds=split(invitesIds)
+        for inviteId in invitesIds:
+            query="SELECT eventsIds FROM contacts WHERE id="+inviteId
+            self.curseur.execute(query)
+            inviteEventsIds=self.curseur.fetchone()[0]
+            inviteEventsIds=set(split(inviteEventsIds))
+            nouveauEventsIds=inviteEventsIds.union(nouveauEventsIds)
+            nouveauEventsIds=concatene(nouveauEventsIds)
+            query="UPDATE contacts SET eventsIds = '"+nouveauEventsIds+"' WHERE id="+str(inviteId)
+            self.curseur.execute(query)
+            self.curseur.commit()
+        return 'nouvelEvenementOk'+'\n'+str(eventId)
 
     def test(self,eventId):
         query="SELECT titre from evenements WHERE id = "+str(eventId)
@@ -53,7 +64,7 @@ class bddEvenements:
     def position(self, clientId):
         query="SELECT eventsIds FROM contacts WHERE id="+str(clientId)
         eventsIds=self.curseur.fetchone()[0]
-        eventsIds=concatene(eventsIds)
+        eventsIds=concatene(eventsIds)m
         reponse='positionEvenementsOk\n'
         evenements=''
         for eventId in eventsIds:
@@ -79,11 +90,3 @@ class bddEvenements:
         self.curseur.execute(query)
         self.connexion.commit()
         return 'joindreEvenementOk'
-
-    
-
-    
-
-#!/usr/bin/python3
-
-import sys
