@@ -6,7 +6,7 @@ import socket
 import socketserver
 import sys
 import threading
-#import evenements
+import evenements
 import contacts
 import utilisateur
 
@@ -70,27 +70,28 @@ class traitementRequete(socketserver.StreamRequestHandler):
 
         elif requeteId=='creerEvenement':     
             evenement=evenements.bddEvenements()
+            titre=self.rfile.readline().strip().decode('utf_8')
             timestampDebut=self.rfile.readline().strip().decode('utf_8')
             timestampFin=self.rfile.readline().strip().decode('utf_8')
             positionX=self.rfile.readline().strip().decode('utf_8')
             positionY=self.rfile.readline().strip().decode('utf_8')
-            longueurTexte=int(self.rfile.readline().strip()).decode('utf_8')
-            texte=self.rfile.readline(longueurTexte).strip().decode('utf_8')
-            nombreInvites=int(self.rfile.readline().strip()).decode('utf_8')
+            longueurTexte=int(self.rfile.readline().strip())
+            texte=self.rfile.readline().strip().decode('utf_8')
+            nombreInvites=int(self.rfile.readline().strip())
             invitesId=[clientId]
             for compteur in range(nombreInvites):
                 invitesId.append(int(self.rfile.readline().strip().decode('utf_8')))
             public=bool(self.rfile.readline().strip().decode('utf_8'))
-            traitement=evenements.nouveau(clientId, titre, timestampDebut, timestampFin, positionX, positionY, texte, invitesId, public)
+            traitement=evenement.nouveau(clientId, titre, timestampDebut, timestampFin, positionX, positionY, texte, invitesId, public)
             
         elif requeteId=='positionEvenements':
             evenement=evenements.bddEvenements()
-            traitement=evenements.position(clientId)
+            traitement=evenement.position(clientId)
             
         elif requeteId=='joindreEvenement':
             evenement=evenements.bddEvenements()
             evenementId=int(self.rfile.readline().strip().decode('utf_8'))
-            traitement=evenements.joindre(clientId, evenementId)
+            traitement=evenement.joindre(clientId, evenementId)
             
 
 #requètes sur les modules complémentaires

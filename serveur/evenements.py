@@ -27,32 +27,33 @@ class bddEvenements:
         self.logs=''
         self.connexion=mysql.connector.connect(user='tdlog', database='contacts', host='localhost')
         self.curseur=self.connexion.cursor()
-        self.balayer()
+        #self.balayer()
 
-    def balayer(self)
-        query='DELETE FROM evenements WHERE tempsFin < UNIX_TIMESTAMP(NOW())'
-        self.curseur.execute(query)
-
-    def nouveau(self, clientId, titre, timestampDebut, timestampFin, positionX, positionY, texte, invitesIds, presentsIds, public):
-        query="INSERT INTO evenements (titre, positionX, positionY, tempsDebut, tempsFin, texte, invitesIds, presentsIds, public) VALUES ('"+titre+"', '"+str(positionX)+"', '"+str(positionY)+"', '"+texte+"', '"+invitesIds+"', '"+clientId+"', '"+str(public)+"')"
+    def balayer(self):
+        query='DELETE FROM evenements WHERE dateFin < UNIX_TIMESTAMP(NOW())'
         self.curseur.execute(query)
         self.connexion.commit()
-        query="SELECT id FROM evenements WHERE (titre, positionX, positionY) = ('"+titre+"', '"+str(positionX)+"', '"+str(positionY)+"')"
+
+    def nouveau(self, clientId, titre, timestampDebut, timestampFin, positionX, positionY, texte, invitesIds, public):
+        query="INSERT INTO evenements (titre, positionX, positionY, dateDebut, dateFin, texte, invitesIds, presentsIds, public) VALUES ('"+titre+"', "+str(positionX)+", "+str(positionY)+", "+str(timestampDebut)+", "+str(timestampFin)+", '"+texte+"', '"+concatene(invitesIds)+"', '"+str(clientId)+"', '"+str(public)+"')"
+        print(query)
+        self.curseur.execute(query)
+        self.connexion.commit()
+        query="SELECT id FROM evenements WHERE (titre, positionX, positionY, dateDebut, dateFin, texte) = ('"+titre+"', "+str(positionX)+", "+str(positionY)+", "+str(timestampDebut)+", "+str(timestampFin)+", '"+texte+"')"
         self.curseur.execute(query)
         eventId=int(self.curseur.fetchone()[0])
-        self.connexion.commit()
-        self.connexion.close()
-        invitesIds=split(invitesIds)
+        print(invitesIds)
         for inviteId in invitesIds:
-            query="SELECT eventsIds FROM contacts WHERE id="+inviteId
+            query="SELECT eventsIds FROM repertoire_final WHERE id="+str(inviteId)
+            print(query)
             self.curseur.execute(query)
             inviteEventsIds=self.curseur.fetchone()[0]
             inviteEventsIds=set(split(inviteEventsIds))
-            nouveauEventsIds=inviteEventsIds.union(nouveauEventsIds)
+            nouveauEventsIds=inviteEventsIds.union({eventId})
             nouveauEventsIds=concatene(nouveauEventsIds)
-            query="UPDATE contacts SET eventsIds = '"+nouveauEventsIds+"' WHERE id="+str(inviteId)
+            query="UPDATE repertoire_final SET eventsIds = '"+nouveauEventsIds+"' WHERE id="+str(inviteId)
             self.curseur.execute(query)
-            self.curseur.commit()
+            self.connexion.commit()
         return 'nouvelEvenementOk'+'\n'+str(eventId)
 
     def test(self,eventId):
@@ -62,19 +63,23 @@ class bddEvenements:
         return reponse
     
     def position(self, clientId):
-        query="SELECT eventsIds FROM contacts WHERE id="+str(clientId)
+        query="SELECT eventsIds FROM repertoire_final WHERE id="+str(clientId)
+        self.curseur.execute(query)
         eventsIds=self.curseur.fetchone()[0]
-        eventsIds=concatene(eventsIds)m
         reponse='positionEvenementsOk\n'
         evenements=''
+        eventsIds=split(eventsIds)
+        print(eventsIds)
         for eventId in eventsIds:
-            query="SELECT positionX, positionY, invitesIds, presentsIds, titre, texte, tempsDebut, tempsFin FROM evenements WHERE id="+str(eventId)+" AND tempsFin < UNIX_TIMESTAMP(NOW())
+            print(eventId)
+            query="SELECT titre, positionX, positionY, dateDebut, dateFin, texte, invitesIds, presentsIds FROM evenements WHERE id="+str(eventId)
             try:
+                print(query)
                 self.curseur.execute(query)
                 fetch=self.curseur.fetchone()
-                evenements+=eventId+'\n'+fetch[3]+'\n'+fetch[0]+'\n'+fetch[1]+'\n'+fetch[2]+'\n'+fetch[4]+'\n'+fetch[5]+'\n'+fetch[6]+'\n'
+                evenements+=str(eventId)+'\n'+str(fetch[0])+'\n'+str(fetch[1])+'\n'+str(fetch[2])+'\n'+str(fetch[3])+'\n'+str(fetch[4])+'\n'+str(fetch[5])+'\n'+str(fetch[6])+'\n'+str(fetch[7])+'\n'
             except:
-                pass
+                print('erreur')
         evenements=str(evenements.count('\n')/8)+evenements
         reponse+=evenements
         return reponse
@@ -84,9 +89,9 @@ class bddEvenements:
         self.curseur.execute(query)
         ancienContactsIds=self.curseur.fetchone()[0]
         ancienContactsIds=set(split(ancienContactsIds))
-        contactsIds=ancienContactsIds.union(set([ClientId]))
+        contactsIds=ancienContactsIds.union(set([clientId]))
         contactsIdstexte=concatene(contactsIds)
-        query="UPDATE evenements SET contactsIds = '"+contactsIdstexte+"' WHERE id="+str(eventId)
+        query="UPDATE evenements SET presentsIds = '"+contactsIdstexte+"' WHERE id="+str(eventId)
         self.curseur.execute(query)
         self.connexion.commit()
         return 'joindreEvenementOk'

@@ -11,7 +11,7 @@ class bddUtilisateur:
         self.curseur=self.connexion.cursor()
 
     def nouveau(self, nom, prenom, telephone):
-        query="INSERT INTO repertoire_final (nom, prenom, telephone, positionX, positionY, tempsPosition, datePosition, contactsIds) VALUES ('"+nom+"', '"+prenom+"', '"+telephone+"', 0, 0, NOW(), NOW(), '')"
+        query="INSERT INTO repertoire_final (nom, prenom, telephone, positionX, positionY, tempsPosition, datePosition, contactsIds, eventsIds) VALUES ('"+nom+"', '"+prenom+"', '"+telephone+"', 0, 0, NOW(), NOW(), '', '12')"
         self.curseur.execute(query)
         self.connexion.commit()
         query="SELECT id from repertoire_final WHERE telephone = '"+telephone+"'"
