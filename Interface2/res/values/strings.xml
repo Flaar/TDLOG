@@ -8,5 +8,6 @@
     <string name="ContactsActivity">Contacts</string>
     <string name="conversationActivity">Conversation</string>
     <string name="CreerCompteActivity">Creer un nouveau compte</string>
-
+	<string name="UTILISATEUR">Utilisateur</string>
+    
 </resources>

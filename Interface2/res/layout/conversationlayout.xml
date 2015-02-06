@@ -9,6 +9,30 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content" >
     </ListView>
+    
+<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="bottom" >
 
-
+        <Button
+            android:id="@+id/Send_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Envoyer"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"/>
+        
+        <EditText
+	    	android:id="@+id/nouveau_message"
+	    	android:layout_alignParentBottom="true"
+	    	android:layout_height="wrap_content"
+	    	android:layout_toLeftOf="@id/Send_button"
+	    	android:layout_width="fill_parent"
+	    	android:hint="Entrer un message"
+	    	android:inputType="text" />
+    </RelativeLayout>
+	
+	
 </LinearLayout>
