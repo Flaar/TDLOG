@@ -57,8 +57,25 @@
             android:label="@string/ContactsActivity" />
         
         <activity
+            android:name=".PartageRDV"
+            android:label="@string/PartageRDV"/>
+        
+        <activity
             android:name=".Utilisateur"
             android:label="@string/UTILISATEUR" />
+        
+                <activity 
+            android:name=".conversationActivity" 
+            android:label="@string/conversationActivity" />
+        <activity 
+            android:name=".CreerCompteActivity" 
+            android:label="@string/CreerCompteActivity" />
+        <activity
+            android:name=".SMS"
+            android:label="SMS" />
+        <activity
+            android:name=".AddContactActivity"
+            android:label="Nouveau contact" />
         
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
@@ -67,6 +84,13 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
+        
+        <receiver android:name=".SMS_receiver"> 
+            <intent-filter> 
+                <action android:name=
+                    "android.provider.Telephony.SMS_RECEIVED" /> 
+            </intent-filter> 
+        </receiver>
         
     </application>
 

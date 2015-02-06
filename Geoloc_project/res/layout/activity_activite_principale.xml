@@ -5,16 +5,34 @@
     android:orientation="vertical" >
 
     <Button
-        android:id="@+id/Options"
+        android:id="@+id/AddMarkerRDV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/OptionsActivity" />
+        android:text="@string/AddMarkerRDVActivity" />
 
     <Button
         android:id="@+id/Contacts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/ContactsActivity" />
+
+    <Button
+        android:id="@+id/Options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/OptionsActivity" />
+    
+      <Button  
+    android:id="@+id/CreerCompte"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"  
+    android:text="@string/NewAccount"/>
+        
+  <Button  
+    android:id="@+id/SMSactivity"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"  
+    android:text="Envoyer SMS" />
 
     <fragment
         android:id="@+id/map"

@@ -4,11 +4,12 @@
   android:layout_height="fill_parent"
   android:orientation="vertical" >
 
-  <TextView
-    android:id="@+id/choixoptions"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:text="Voici vos contacts" />
+  <Button 
+        android:id="@+id/addContactButton"  
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:text="Ajouter un contact"
+        />
 
     
     <ListView

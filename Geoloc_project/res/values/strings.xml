@@ -6,8 +6,14 @@
     <string name="action_settings">Settings</string>
     <string name="OptionsActivity">Options</string>
     <string name="ContactsActivity">Contacts</string>
+    <string name="AddMarkerRDVActivity">Add a marker</string>
     <string name="UTILISATEUR">Utilisateur</string>
     <string name="OK"> OK </string>
     <string name="CHOIXOPTIONS"> Choisissez vos options </string>
+    <string name="PartageRDV"> Partager avec : </string>
+    <string name="NewAccount"> Nouveau Compte </string>
+    <string name="CreateAccount"> Créer un compte </string>
+    <string name="conversationActivity">Conversation</string>
+    <string name="CreerCompteActivity">Creer un nouveau compte</string>
 
 </resources>

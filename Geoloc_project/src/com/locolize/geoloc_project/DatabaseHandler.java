@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
  
 public class DatabaseHandler extends SQLiteOpenHelper {
- 
+	
     // All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 1;
@@ -31,14 +31,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        
     }
  
     // Creating Tables
+    public void create_table(SQLiteDatabase db) {
+    	System.out.println("on rentre dans le create-table");
+        String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTS + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT," + KEY_SURNAME + " TEXT," + KEY_PH_NO + " TEXT,"+ KEY_MESSAGE + " TEXT" + ")";
+        db.execSQL(CREATE_CONTACTS_TABLE);
+        System.out.println("on sort du create-table");
+    }
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT," + KEY_SURNAME + " TEXT,"
-                + KEY_PH_NO + " TEXT,"+ KEY_MESSAGE + " TEXT" + ")";
+    	System.out.println("on rentre dans le onCreate");
+        String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTS + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT," + KEY_SURNAME + " TEXT," + KEY_PH_NO + " TEXT,"+ KEY_MESSAGE + " TEXT" + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
  
@@ -59,29 +65,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         
     // Adding new contact
     void addContact(Contact contact) {
+    	System.out.println("before writable");
         SQLiteDatabase db = this.getWritableDatabase();
- 
+        System.out.println("after writable");
         ContentValues values = new ContentValues();
+        System.out.println("after values");
         values.put(KEY_NAME, contact.name); // Contact Name
         values.put(KEY_SURNAME, contact.surname); 
         values.put(KEY_PH_NO, contact.phone_number); // Contact Phone
         values.put(KEY_MESSAGE, "");
+        System.out.println("after setting");
         // Inserting Row
         db.insert(TABLE_CONTACTS, null, values);
+        System.out.println("after insert");
         db.close(); // Closing database connection
+        System.out.println("after close");
     }
  
     // Getting single contact
     Contact getContact(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
  
-        Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID,
-                KEY_NAME, KEY_SURNAME, KEY_PH_NO, KEY_MESSAGE }, KEY_ID + "=?",
-                new String[] { String.valueOf(id) }, null, null, null, null);// rajouter 2 null ?? parce que j'ai ajouté surname et message ??
+        Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID, KEY_NAME, KEY_SURNAME, KEY_PH_NO, KEY_MESSAGE }, KEY_ID + "=?", new String[] { String.valueOf(id) }, null, null, null, null);// rajouter 2 null ?? parce que j'ai ajouté surname et message ??
         if (cursor != null)
             cursor.moveToFirst();
  
-        Contact contact = new Contact(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), Integer.parseInt(cursor.getString(3)));
+        Contact contact = new Contact(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3));
         // return contact
         return contact;
     }
@@ -98,7 +107,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                Contact contact = new Contact(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), Integer.parseInt(cursor.getString(3)));
+                Contact contact = new Contact(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3));
                 // Adding contact to list
                 contactList.add(contact);
             } while (cursor.moveToNext());
