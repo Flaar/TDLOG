@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/create_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/large_padding"
+        android:text="Créer un compte" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="@dimen/normal_padding"
+        android:text="Numéro de téléphone"
+        android:textSize="@dimen/normal_text_size"
+        android:textColor="@color/black_color" />
+
+    <EditText
+        android:id="@+id/phono_number"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:layout_gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="@dimen/normal_padding"
+        android:textSize="@dimen/normal_text_size"
+        android:text="Mot de passe"
+        android:textColor="@color/black_color" />
+
+    <EditText
+        android:id="@+id/user_password"
+        android:layout_width="@dimen/large_padding"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/normal_padding"
+        android:text="Se connecter" />
+
+</LinearLayout>
