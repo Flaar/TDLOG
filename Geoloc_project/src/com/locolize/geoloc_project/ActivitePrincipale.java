@@ -192,7 +192,7 @@ public void onCreate(Bundle savedInstanceState) {
 	    final Button optionsButton = (Button) findViewById(R.id.Options);
 	    final Button addMarkerButton = (Button) findViewById(R.id.AddMarkerRDV);
 	    final Button CreerCompteButton = (Button) findViewById(R.id.CreerCompte);
-	    final Button SMSButton = (Button) findViewById(R.id.SMSactivity);
+	    //final Button SMSButton = (Button) findViewById(R.id.SMSactivity);
 	    
 	    contactsButton.setOnClickListener(new OnClickListener() {
 	    	  @Override
@@ -237,16 +237,6 @@ public void onCreate(Bundle savedInstanceState) {
 	    		  
 	    		}
 	    	});
-	    
-	    SMSButton.setOnClickListener(new OnClickListener() {
-	    	  @Override
-	    	  public void onClick(View v) {
-		  		Intent intent = new Intent(ActivitePrincipale.this, CreerCompteActivity.class);
-		  		startActivity(intent);
-	    		  
-	    		}
-	    	});
-	    
 	    
 	    addMarkerButton.setOnClickListener(new OnClickListener(){
 	    	@Override
