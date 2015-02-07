@@ -21,10 +21,10 @@ class bddUtilisateur:
         return 'nouveauClientOk'+'\n'+str(clientId)
 
     def identite(self,clientNum):
-        query="SELECT id from repertoire_final WHERE numero = "+str(clientNum)
+        query="SELECT id from repertoire_final WHERE telephone = "+str(clientNum)
         self.curseur.execute(query)
         reponse=self.curseur.fetchone()[0]
-        return 'tonIdEst\n'+reponse
+        return 'tonIdEst\n'+str(reponse)
 
 
     def actualisePosition(self, clientId, clientPositionX, clientPositionY):
