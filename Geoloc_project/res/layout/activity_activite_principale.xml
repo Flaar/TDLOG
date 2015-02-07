@@ -3,19 +3,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+    
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
 
     <Button
         android:id="@+id/AddMarkerRDV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
         android:text="@string/AddMarkerRDVActivity" />
+
+            <!--  -->
+
+    <Button
+        android:id="@+id/SMSactivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Envoyer SMS" />
 
     <Button
         android:id="@+id/Contacts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/ContactsActivity" />
-
+</LinearLayout>
+    
+    <LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+    
     <Button
         android:id="@+id/Options"
         android:layout_width="wrap_content"
@@ -27,18 +47,15 @@
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content"  
     android:text="@string/NewAccount"/>
-        
-  <Button  
-    android:id="@+id/SMSactivity"
-    android:layout_width="wrap_content" 
-    android:layout_height="wrap_content"  
-    android:text="Envoyer SMS" />
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        class="com.google.android.gms.maps.MapFragment" />
 
 </LinearLayout>
+
+<fragment
+    android:id="@+id/map"
+    android:name="com.google.android.gms.maps.MapFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    class="com.google.android.gms.maps.MapFragment" />
+
+</LinearLayout>      
