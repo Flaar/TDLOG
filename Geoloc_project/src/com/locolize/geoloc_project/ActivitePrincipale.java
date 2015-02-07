@@ -55,6 +55,7 @@ public class ActivitePrincipale extends Activity implements LocationListener{
 	public Utilisateur user;
 	public float defaultZoom = 15f;
 	public boolean camCentering = true;
+	public LatLng lastLatLng = new LatLng(0,0);
 	
 @Override
 public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +72,7 @@ public void onCreate(Bundle savedInstanceState) {
 		
 		ArrayList<Contact> contacts_tab = new ArrayList<Contact>(0);
 		ArrayList<Event> events_tab = new ArrayList<Event>(0);
-		Utilisateur user = new Utilisateur();
+		final Utilisateur user = new Utilisateur();
 		double lat1 = 48.853;double lon1 = 2.35; //Notre Dame de Paris
 		double lat2 = 48.855159;double lon2 = 2.361385; //Carrousel du Louvre
 		double lat3 = 48.8583700999;double lon3 = 2.2944813000; //Tour Eiffel
@@ -146,14 +147,31 @@ public void onCreate(Bundle savedInstanceState) {
 						// TODO Auto-generated method stub
 						//On affiche une bulle dans la même fenetre qui contient un ou plusieurs boutons
 						//
-						//if arg0.position.getLatitude();
-			        	Intent intent4 = new Intent(ActivitePrincipale.this, conversationActivity.class);
+						//if arg0.getPosition();
+						Toast.makeText(getApplicationContext(), 
+								String.valueOf(arg0.getPosition().latitude), Toast.LENGTH_LONG).show();
+						for(Contact contact : user.close_contacts){
+							if(arg0.getPosition()==contact.latlng){
+								Contact currContact = new Contact();
+								currContact = contact;
+								break;
+							}
+						}
+						
+						 try {
+							 Thread.sleep(3000);
+								
+							  } catch (Exception e) {
+							    System.out.println("Le thread s'est arrêté avant !");
+							  }
+						Intent intent4 = new Intent(ActivitePrincipale.this, conversationActivity.class);
 			        	  final String POSITION="position";
-			        	//intent.putExtra(POSITION, position);
-			        	  intent4.putExtra(POSITION, "Rue Mouffetard");
+			        	//intent4.putExtra(POSITION, position);
+			        	  //intent4.putExtra(POSITION, "Rue Mouffetard");
 				  		startActivity(intent4);
 						
 						return false;
+						
 					}
 				});
 
