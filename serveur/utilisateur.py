@@ -11,20 +11,24 @@ class bddUtilisateur:
         self.curseur=self.connexion.cursor()
 
     def nouveau(self, nom, prenom, telephone):
-        query="INSERT INTO repertoire_final (nom, prenom, telephone, positionX, positionY, tempsPosition, datePosition, contactsIds, eventsIds) VALUES ('"+nom+"', '"+prenom+"', '"+telephone+"', 0, 0, NOW(), NOW(), '', '12')"
-        self.curseur.execute(query)
-        self.connexion.commit()
-        query="SELECT id from repertoire_final WHERE telephone = '"+telephone+"'"
-        self.curseur.execute(query)
-        clientId=int(self.curseur.fetchone()[0])
-        self.connexion.close()
-        return 'nouveauClientOk'+'\n'+str(clientId)
+        try:
+            query="INSERT INTO repertoire_final (nom, prenom, telephone, positionX, positionY, tempsPosition, datePosition, contactsIds, eventsIds) VALUES ('"+nom+"', '"+prenom+"', '"+telephone+"', 0, 0, NOW(), NOW(), '', '12')"
+            self.curseur.execute(query)
+            self.connexion.commit()
+            query="SELECT id from repertoire_final WHERE telephone = '"+telephone+"'"
+            self.curseur.execute(query)
+            clientId=int(self.curseur.fetchone()[0])
+            self.connexion.close()
+            return 'nouveauClientOk'+'\n'+str(clientId)
+        except:
+            reponse = self.identite(telephone)
+            return reponse+'\n'+nom+'\n'+prenom
 
-    def identite(self,clientNum):
-        query="SELECT id from repertoire_final WHERE telephone = "+str(clientNum)
+    def identite(self,telephone):
+        query="SELECT id from repertoire_final WHERE telephone = "+str(telephone)
         self.curseur.execute(query)
         reponse=self.curseur.fetchone()[0]
-        return 'tonIdEst\n'+str(reponse)
+        return 'nouveauClientOk\n'+str(reponse)
 
 
     def actualisePosition(self, clientId, clientPositionX, clientPositionY):

@@ -39,7 +39,8 @@ class bddEvenements:
         print(query)
         self.curseur.execute(query)
         self.connexion.commit()
-        query="SELECT id FROM evenements WHERE (titre, positionX, positionY, dateDebut, dateFin, texte) = ('"+titre+"', "+str(positionX)+", "+str(positionY)+", "+str(timestampDebut)+", "+str(timestampFin)+", '"+texte+"')"
+        query="SELECT id FROM evenements WHERE (titre, texte, invitesIds) = ('"+titre+"', '"+texte+"', '"+concatene(invitesIds)+"')"
+        print(query)
         self.curseur.execute(query)
         eventId=int(self.curseur.fetchone()[0])
         print(invitesIds)
