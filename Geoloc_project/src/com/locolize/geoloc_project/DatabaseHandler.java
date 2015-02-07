@@ -46,6 +46,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	System.out.println("on rentre dans le onCreate");
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTS + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT," + KEY_SURNAME + " TEXT," + KEY_PH_NO + " TEXT,"+ KEY_MESSAGE + " TEXT" + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
+        System.out.println("on sort du create-table");
     }
  
     // Upgrading database
@@ -85,11 +86,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Getting single contact
     Contact getContact(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
- 
-        Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID, KEY_NAME, KEY_SURNAME, KEY_PH_NO, KEY_MESSAGE }, KEY_ID + "=?", new String[] { String.valueOf(id) }, null, null, null, null);// rajouter 2 null ?? parce que j'ai ajouté surname et message ??
+        System.out.println("after writable");
+        Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID, KEY_NAME, KEY_SURNAME, KEY_PH_NO, KEY_MESSAGE }, KEY_ID + "=?", new String[] { String.valueOf(id) }, null, null, null, null);// rajouter 2 null ?? parce que j'ai ajoutï¿½ surname et message ??
+        System.out.println("after query");
+        System.out.println(cursor);
         if (cursor != null)
             cursor.moveToFirst();
- 
+        System.out.println("before contact");
+        System.out.println(Integer.parseInt(cursor.getString(0)));
+        System.out.println(cursor.getString(1));
+        System.out.println(cursor.getString(2));
+        System.out.println(cursor.getString(3));
         Contact contact = new Contact(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3));
         // return contact
         return contact;
@@ -132,23 +139,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     
     public int updateMessage (String text,Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
- 
+        System.out.println("after writable");
         ContentValues values = new ContentValues();
+        System.out.println("after values");
         values.put(KEY_MESSAGE, text);
-        
+        System.out.println("after put");
+        System.out.println(String.valueOf(contact.id));
         // updating row
-        return db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",new String[] { String.valueOf(contact.id)});
+        return db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",new String[] { String.valueOf(contact.id)});        
     }
     
     String getMessage(Contact contact) {
         SQLiteDatabase db = this.getReadableDatabase();
- 
-        Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID,
-                KEY_NAME, KEY_SURNAME, KEY_PH_NO, KEY_MESSAGE }, KEY_ID + "=?",
-                new String[] { String.valueOf(contact.id) }, null, null, null, null);// rajouter 2 null ?? parce que j'ai ajouté surname et message ??
+        System.out.println("after writable");
+        System.out.println(contact.id);
+        Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID, KEY_NAME, KEY_SURNAME, KEY_PH_NO, KEY_MESSAGE }, KEY_ID + "=?", new String[] { String.valueOf(contact.id) }, null, null, null, null);// rajouter 2 null ?? parce que j'ai ajoutï¿½ surname et message ??
+        System.out.println("before cursor");
         if (cursor != null)
             cursor.moveToFirst();
- 
+        System.out.println("after cursor");
+        System.out.println(cursor.getString(4));
         String conversation = cursor.getString(4);
         // return contact
         return conversation;

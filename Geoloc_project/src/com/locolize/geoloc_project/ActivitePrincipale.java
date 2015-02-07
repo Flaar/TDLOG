@@ -19,11 +19,13 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,9 +55,10 @@ public class ActivitePrincipale extends Activity implements LocationListener{
 	Marker marqueur_rdv_courant;
 	private boolean addMarker = false;
 	public Utilisateur user;
-	public float defaultZoom = 15f;
-	public boolean camCentering = true;
-	public LatLng lastLatLng = new LatLng(0,0);
+	
+	
+	 //static final LatLng HAMBURG = new LatLng(53.558, 9.927);
+	 //static final LatLng KIEL = new LatLng(53.551, 9.993);
 	
 @Override
 public void onCreate(Bundle savedInstanceState) {
@@ -70,23 +73,64 @@ public void onCreate(Bundle savedInstanceState) {
 		otherIcon = R.drawable.purple_point;
 		friendIcon = R.drawable.purple_point;
 		
+		
+		//add_all_phone_contacts_to_database();
+		
+		/*
+		DatabaseHandler database = new DatabaseHandler(this);
+		System.out.println("apr�s database");
+		Contact hubert= new Contact("Hubert", "Ruppert", "146746824");
+		System.out.println("apr�s creation hubert");
+		database.addContact(hubert);
+		System.out.println("apr�s ajout hubert database");
+		Contact hubert_bis=database.getContact(1);
+		System.out.println(hubert_bis.name);
+		database.updateMessage ("je suis travail",hubert_bis);
+		System.out.println("apr�s ajout message");
+		String message_to_print;
+		message_to_print=database.getMessage(hubert_bis);
+		System.out.println("apr�s getmessage");
+		System.out.println(message_to_print);
+		*/
+		
+		
+		/*
+		System.out.println("Avant database");
+		//DatabaseHandler database = new DatabaseHandler(context);
+		//database.create_table(db);
+		
+		System.out.println("apr�s database");
+		Contact hubert= new Contact("Hubert", "Ruppert", 146746824);
+		System.out.println("apr�s creation hubert");
+		database.addContact(hubert);
+		System.out.println("apr�s ajout hubert database");
+		database.updateMessage ("je suis travail",hubert);
+		System.out.println("apr�s ajout message");
+		String message_to_print;
+		message_to_print=database.getMessage(hubert);
+		System.out.println("apr�s getmessage");
+		System.out.println(message_to_print);
+		//contacts = database.getAllContacts();*/
 		ArrayList<Contact> contacts_tab = new ArrayList<Contact>(0);
 		ArrayList<Event> events_tab = new ArrayList<Event>(0);
-		final Utilisateur user = new Utilisateur();
-		double lat1 = 48.853;double lon1 = 2.35; //Notre Dame de Paris
-		double lat2 = 48.855159;double lon2 = 2.361385; //Carrousel du Louvre
-		double lat3 = 48.8583700999;double lon3 = 2.2944813000; //Tour Eiffel
-		double lat4=48.856; double lon4=2.34;
+		Utilisateur user = new Utilisateur();
+		double lat1 = 48.853;
+		double lon1 = 2.35; //Notre Dame de Paris
+		double lat2 = 48.855159;
+		double lon2 = 2.361385; //Carrousel du Louvre
+		double lat3 = 48.8583700999;
+		double lon3 = 2.2944813000; //Tour Eiffel
 		
-		//on appelle ici la fonction qui remplit le tableau des contacts
-		
-		Contact c1 = new Contact(); Contact c2 = new Contact(); Contact c3=new Contact(); Contact c4 =new Contact();
-		//user.close_contacts.add(c2);//LatLng LaLo = new LatLng(lat1,lon1);//c1.setLatLng(LaLo);//c1.position.setLatitude(lat1);//c1.position.setLongitude(lon1);
-		c1.latlng = new LatLng(lat1,lon1);c1.pseudo="Xavier"; //c1.name="a";c1.surname="a";c1.position= new Location("Paris");c1.id=1;c1.phone_number=0;
+		Contact c1 = new Contact(); 
+		//Contact c2 = new Contact();
+		//user.close_contacts.add(c2);
+		//LatLng LaLo = new LatLng(lat1,lon1);
+		//c1.setLatLng(LaLo);
+		//c1.position.setLatitude(lat1);
+		//c1.position.setLongitude(lon1);
+		c1.latlng = new LatLng(lat1,lon1);
+		c1.pseudo="ND de Paris"; //c1.name="a";c1.surname="a";c1.position= new Location("Paris");c1.id=1;c1.phone_number=0;
 		c1.visible=true;
-		c2.latlng= new LatLng(lat2,lon2);c2.pseudo="Pierre"; c2.visible=true;
-		c3.latlng=new LatLng(lat3,lon3);c3.pseudo="Vincent";c3.visible=true;
-		c4.latlng=new LatLng(lat4,lon4);c4.pseudo="Romain";c4.visible=true;
 		//c2.position.setLatitude(lat2); c2.position.setLongitude(lon2); c2.pseudo="Carrousel du Louvre";
 		//Contact c3 = new Contact(); c3.position.setLatitude(lat3); c3.position.setLongitude(lon3); c3.pseudo="Tour Eiffel";
 		
@@ -95,7 +139,9 @@ public void onCreate(Bundle savedInstanceState) {
 		
 		user.close_contacts = contacts_tab;
 		user.close_events = events_tab;
-		user.close_contacts.add(c1);user.close_contacts.add(c2);user.close_contacts.add(c3);user.close_contacts.add(c4);
+		user.close_contacts.add(c1);
+		//user.close_contacts.add(c2);
+		//user.close_contacts.add(c3);
 		
 		if(theMap==null){
 			//on "recupere" la carte
@@ -104,7 +150,6 @@ public void onCreate(Bundle savedInstanceState) {
 			if(theMap!=null){
 				//ok - proceed
 				theMap.setMapType(GoogleMap.MAP_TYPE_NORMAL); //on peut aussi mettre HYBRID, TERRAIN, ...
-				//CameraUpdateFactory.zoomTo(15); 
 				theMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener()
 				{
 					@Override
@@ -130,7 +175,7 @@ public void onCreate(Bundle savedInstanceState) {
 						}
 						//new GetTask().execute(point);
 						addMarker = false;
-						//lancer activité partager à : avec des checkboxes
+						//lancer activit� partager � : avec des checkboxes
 						//
 						Intent intent3 = new Intent(ActivitePrincipale.this, PartageRDV.class);
 				  		startActivity(intent3);
@@ -139,41 +184,24 @@ public void onCreate(Bundle savedInstanceState) {
 					}	
 				});
 				
-				
+				/*
 				theMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 					
 					@Override
 					public boolean onMarkerClick(Marker arg0) {
 						// TODO Auto-generated method stub
-						//On affiche une bulle dans la même fenetre qui contient un ou plusieurs boutons
-						//
-						//if arg0.getPosition();
-						Toast.makeText(getApplicationContext(), 
-								String.valueOf(arg0.getPosition().latitude), Toast.LENGTH_LONG).show();
-						for(Contact contact : user.close_contacts){
-							if(arg0.getPosition()==contact.latlng){
-								Contact currContact = new Contact();
-								currContact = contact;
-								break;
-							}
-						}
-						
-						 try {
-							 Thread.sleep(3000);
-								
-							  } catch (Exception e) {
-							    System.out.println("Le thread s'est arrêté avant !");
-							  }
-						Intent intent4 = new Intent(ActivitePrincipale.this, conversationActivity.class);
-			        	  final String POSITION="position";
-			        	//intent4.putExtra(POSITION, position);
-			        	  //intent4.putExtra(POSITION, "Rue Mouffetard");
-				  		startActivity(intent4);
+						//On affiche une bulle dans la m�me fenetre qui contient un ou plusieurs boutons
 						
 						return false;
-						
 					}
-				});
+				})*/;
+				
+				
+				
+				
+				
+				  
+				
 
 				user.printContacts(theMap);
 				
@@ -192,7 +220,6 @@ public void onCreate(Bundle savedInstanceState) {
 	    final Button optionsButton = (Button) findViewById(R.id.Options);
 	    final Button addMarkerButton = (Button) findViewById(R.id.AddMarkerRDV);
 	    final Button CreerCompteButton = (Button) findViewById(R.id.CreerCompte);
-	    //final Button SMSButton = (Button) findViewById(R.id.SMSactivity);
 	    
 	    contactsButton.setOnClickListener(new OnClickListener() {
 	    	  @Override
@@ -200,22 +227,39 @@ public void onCreate(Bundle savedInstanceState) {
 	  
 		  		Intent intent = new Intent(ActivitePrincipale.this, ContactsActivity.class);
 		  		startActivity(intent);
-		  		/*try {
-					Utilisateur user=new Utilisateur("Ruppert","le mecha shark", 57656784);
+		  		try {
+					Utilisateur user=new Utilisateur("Hugues","le mecha shark", "007856784");
+			  		Contact hug= new Contact();
+			  		//hug=user.add_one_contact_to_server("+33604441320");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}*/
-		  		Utilisateur user=new Utilisateur(21);
+				}
+		  		//Utilisateur user=new Utilisateur(21);
 		  		//user.test_requete(); // marche
-		  		try {
+		  		/*try {
 					user.update_close_contact_list();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}// ne marche pas 
+				}*/
+		  		
+		  		
 		  		//Utilisateur user=new Utilisateur(1);
 		  		//user.update_close_contact_list();
+		  		//user.print_close_contact_list();
+		  		
+		  		/*
+		  		locMan = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		  		//obtention de la dernier position
+		  		Location lastLoc = locMan.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		  		double lat = lastLoc.getLatitude();
+		  		double lng = lastLoc.getLongitude();
+		  		//creation d'un objet LatLng
+		  		LatLng lastLatLng = new LatLng(lat, lng);
+
+		  		user.position= lastLoc;
+		  		user.update_location();*/
 	    		}
 	    	});
 	   
@@ -238,10 +282,12 @@ public void onCreate(Bundle savedInstanceState) {
 	    		}
 	    	});
 	    
+	    
+	    
 	    addMarkerButton.setOnClickListener(new OnClickListener(){
 	    	@Override
 	    	public void onClick(View v){
-	    		//Mettre à un l'ajout de marqueur;
+	    		//Mettre � un l'ajout de marqueur;
 			    addMarker=true;
 	    		
 	    		//Afficher un toast
@@ -253,6 +299,28 @@ public void onCreate(Bundle savedInstanceState) {
 	    
 	   
 	}
+
+public void add_all_phone_contacts_to_database(){
+	DatabaseHandler database = new DatabaseHandler(this);
+	System.out.println("P1");
+  	Log.d("Insert: ", "Inserting all the contacts ..");
+  	Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
+  	System.out.println("P2");
+      while (phones.moveToNext())
+      {
+      	String contact_name=phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+      	String contact_phone_number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+      	System.out.println("p3");
+      	System.out.println(contact_name);
+      	System.out.println(contact_phone_number);
+
+      	Contact this_contact=new Contact(contact_name, "dit Schilton", contact_phone_number);
+      	database.addContact(this_contact);
+
+      }
+      phones.close();    
+  }
+  
 
 @Override
 public void onLocationChanged(Location location) {
@@ -278,6 +346,7 @@ public void onStatusChanged(String provider, int status, Bundle extras) {
 }
 
 
+
 private void updatePlaces() throws Exception{
 	//on obtient le gestionnaire de lieu "location manager"
 	locMan = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -288,8 +357,8 @@ private void updatePlaces() throws Exception{
 	//creation d'un objet LatLng
 	LatLng lastLatLng = new LatLng(lat, lng);
 
-	//user.position= lastLoc;
-	//user.update_location();
+	user.position= lastLoc;
+	user.update_location();
 	//suppression de tous les marqueurs deja existants
 	if(userMarker!=null) userMarker.remove();
 	//creation et initialisation des proprietes du marqueur de l'utilisateur
@@ -299,11 +368,8 @@ private void updatePlaces() throws Exception{
 	.icon(BitmapDescriptorFactory.fromResource(userIcon))
 	.snippet("Your last recorded location"));
 	//deplacement vers la position actuelle de l'utilisateur
-	//CameraUpdateFactory cam;//cam.zoomTo(15);//cam.newLatLng(lastLatLng);
-	if(camCentering==true){			//on ne zoom automatiquement que lorsque l'utilisateur ouvre l'appli
-	theMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng,defaultZoom), 3000, null);
-	camCentering=false;
-	}	
+	theMap.animateCamera(CameraUpdateFactory.newLatLng(lastLatLng), 3000, null);
+	
 	//construction des strings des requetes de POI
 	String placesSearchStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
 			"json?location="+lat+","+lng+
@@ -324,13 +390,13 @@ private class GetPlaces extends AsyncTask<String, Void, String> {
 		
 		//construction du resultat en tant que string
 		StringBuilder placesBuilder = new StringBuilder();
-		//traitement des paramètres strings de recherche
+		//process search parameter string(s)
 		for (String placeSearchURL : placesURL) {
 			HttpClient placesClient = new DefaultHttpClient();
 			try {
 				//essaie d'obtenir les donnees
 				
-				//HTTP Get reçoit la string URL
+				//HTTP Get re�oit la string URL
 				HttpGet placesGet = new HttpGet(placeSearchURL);
 				//execution GET avec le Client - retour de la reponse
 				HttpResponse placesResponse = placesClient.execute(placesGet);
@@ -359,7 +425,7 @@ private class GetPlaces extends AsyncTask<String, Void, String> {
 		}
 		return placesBuilder.toString();
 	}
-	//analyse des donnes recuperees depuis doInBackground
+	//process data retrieved from doInBackground
 	protected void onPostExecute(String result) {
 		//analyse des des donnees de lieux retournes par l'API Google Places
 		//suppression des marqueurs existants
