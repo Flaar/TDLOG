@@ -10,7 +10,8 @@ import android.widget.Toast;
 import android.content.Intent;
 import android.app.PendingIntent;
 import android.telephony.SmsManager;
-
+import java.util.List;
+import java.util.ArrayList;
 
 public class conversationActivity extends Activity {
   
@@ -20,6 +21,7 @@ public class conversationActivity extends Activity {
   
   final String POSITION="position";
   int pos=0;
+  List<String> texte;
   
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -31,19 +33,17 @@ public class conversationActivity extends Activity {
     mMessages = new String[]{"Bonjour \nComment vas-tu?", "Ca va?", "Bien et toi?", "Robin", "Robin", "Robin", "Robin", "Robin", "Robin", "Robin", "Robin"
     		, "Robin", "Charles", "Romain", "Robin", "Eric", "Robin", "Robin", "Claude", "Robin"};
 
-    String[] mSpecificMessage = new String [1];
+    texte = new ArrayList<String>();
     
     if (intent != null)
     {
     	pos=intent.getIntExtra(POSITION,-1);
-    	mSpecificMessage[0]=mMessages[pos];
+    	texte.add(mMessages[pos]);;
     }
 
-    mlistMessages.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mSpecificMessage));
+    mlistMessages.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, texte));
     
-    mNumbers=new String[] {"0662598022"};
-    
-    
+    mNumbers=new String[] {"0662598022","0604441320"};
     
     
     
@@ -60,7 +60,10 @@ public class conversationActivity extends Activity {
             {
                 sendSMS(phoneNo, message);
             	Toast.makeText(conversationActivity.this, "SMS envoyé", Toast.LENGTH_SHORT).show();
-            	mMessages[pos]=mMessages[pos].concat("\n").concat(message);
+            	texte.add(message);
+            	mlistMessages.setAdapter(new ArrayAdapter<String>(conversationActivity.this, android.R.layout.simple_list_item_1, texte));
+            	txtmessage.setText("");
+            	txtmessage.setFocusable(false);
             }
             else
                 Toast.makeText(getBaseContext(), 
