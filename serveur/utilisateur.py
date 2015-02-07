@@ -18,13 +18,13 @@ class bddUtilisateur:
         self.curseur.execute(query)
         clientId=int(self.curseur.fetchone()[0])
         self.connexion.close()
-        return '1\n'+'nouveauClientOk'+'\n'+str(clientId)
+        return 'nouveauClientOk'+'\n'+str(clientId)
 
-    def test(self,clientId):
-        query="SELECT nom from repertoire_final WHERE id = "+str(clientId)
+    def identite(self,clientNum):
+        query="SELECT id from repertoire_final WHERE numero = "+str(clientNum)
         self.curseur.execute(query)
         reponse=self.curseur.fetchone()[0]
-        return '1\n'+reponse
+        return 'tonIdEst\n'+reponse
 
 
     def actualisePosition(self, clientId, clientPositionX, clientPositionY):
@@ -34,4 +34,4 @@ class bddUtilisateur:
         self.curseur.execute(query)
         self.connexion.commit()
         self.connexion.close()
-        return '1\n'+'actualisePosition OK'
+        return 'actualisePosition OK'

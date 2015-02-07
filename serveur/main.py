@@ -36,9 +36,9 @@ class traitementRequete(socketserver.StreamRequestHandler):
             telephone=self.rfile.readline().strip().decode('utf_8')
             traitement=client.nouveau(nom, prenom, telephone)
 
-        elif requeteId=='whoAmI':
+        elif requeteId=='quiSuisJe':
             client=utilisateur.bddUtilisateur()
-            traitement=client.test(clientId)
+            traitement=client.identite(clientId)
 
         elif requeteId=='actualisePosition':
             client=utilisateur.bddUtilisateur()
