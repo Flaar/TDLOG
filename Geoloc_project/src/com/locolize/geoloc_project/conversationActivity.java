@@ -63,7 +63,7 @@ public class conversationActivity extends Activity {
             	texte.add(message);
             	mlistMessages.setAdapter(new ArrayAdapter<String>(conversationActivity.this, android.R.layout.simple_list_item_1, texte));
             	txtmessage.setText("");
-            	txtmessage.setFocusable(false);
+            	//txtmessage.setFocusable(false);
             }
             else
                 Toast.makeText(getBaseContext(), 

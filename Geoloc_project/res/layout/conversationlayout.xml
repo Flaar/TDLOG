@@ -31,7 +31,7 @@
 	    	android:layout_toLeftOf="@id/Send_button"
 	    	android:layout_width="fill_parent"
 	    	android:hint="Entrer un message"
-	    	android:inputType="text" />
+	    	android:inputType="textCapSentences" />
     </RelativeLayout>
 	
 	
