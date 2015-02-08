@@ -176,18 +176,38 @@ public void onCreate(Bundle savedInstanceState) {
 					}	
 				});
 				
-				/*
-				theMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-					
-					@Override
-					public boolean onMarkerClick(Marker arg0) {
+public boolean onMarkerClick(Marker arg0) {
 						// TODO Auto-generated method stub
-						//On affiche une bulle dans la m�me fenetre qui contient un ou plusieurs boutons
+						//On affiche une bulle dans la même fenetre qui contient un ou plusieurs boutons
+						//
+						//if arg0.getPosition();
+						Toast.makeText(getApplicationContext(), 
+								String.valueOf(arg0.getPosition().latitude), Toast.LENGTH_LONG).show();
+						for(Contact contact : user.close_contacts){
+							if(arg0.getPosition()==contact.latlng){
+								//Contact currContact = new Contact();
+								CURRENT_CONTACT = contact;
+								break;
+							}
+						}
+						
+						 try {
+							 Thread.sleep(3000);
+								
+							  } catch (Exception e) {
+							    System.out.println("Le thread s'est arrêté avant !");
+							  }
+						Intent intent4 = new Intent(ActivitePrincipale.this, conversationActivity.class);
+			        	  final String POSITION="position";
+			        	//intent4.putExtra(CURRENT_CONTACT, "Contact courant");
+			        	  //intent4.putExtra("CURRENT_CONTACT", value);
+			        	  
+				  		startActivity(intent4);
 						
 						return false;
+						
 					}
-				})*/;
-				
+				});
 				
 				
 				
