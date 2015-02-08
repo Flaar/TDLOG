@@ -56,10 +56,6 @@ public class ActivitePrincipale extends Activity implements LocationListener{
 	private boolean addMarker = false;
 	public Utilisateur user;
 	
-	
-	 //static final LatLng HAMBURG = new LatLng(53.558, 9.927);
-	 //static final LatLng KIEL = new LatLng(53.551, 9.993);
-	
 @Override
 public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
