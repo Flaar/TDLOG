@@ -9,12 +9,28 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:paddingTop="@dimen/normal_padding"
+        android:text="Prénom du contact"
+        android:textSize="@dimen/normal_text_size"
+        android:textColor="@color/black_color" />
+
+    <EditText
+        android:id="@+id/contact_first_name"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:inputType="textCapWords"
+        android:layout_gravity="center" />
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="@dimen/normal_padding"
         android:text="Nom du contact"
         android:textSize="@dimen/normal_text_size"
         android:textColor="@color/black_color" />
 
     <EditText
-        android:id="@+id/contact_namer"
+        android:id="@+id/contact_last_name"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:inputType="textCapWords"

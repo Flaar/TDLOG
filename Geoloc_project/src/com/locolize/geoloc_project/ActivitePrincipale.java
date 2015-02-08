@@ -227,14 +227,14 @@ public void onCreate(Bundle savedInstanceState) {
 	  
 		  		Intent intent = new Intent(ActivitePrincipale.this, ContactsActivity.class);
 		  		startActivity(intent);
-		  		try {
+		  		/*try {
 					Utilisateur user=new Utilisateur("Hugues","le mecha shark", "007856784");
 			  		Contact hug= new Contact();
 			  		//hug=user.add_one_contact_to_server("+33604441320");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
 		  		//Utilisateur user=new Utilisateur(21);
 		  		//user.test_requete(); // marche
 		  		/*try {
@@ -299,27 +299,6 @@ public void onCreate(Bundle savedInstanceState) {
 	    
 	   
 	}
-
-public void add_all_phone_contacts_to_database(){
-	DatabaseHandler database = new DatabaseHandler(this);
-	System.out.println("P1");
-  	Log.d("Insert: ", "Inserting all the contacts ..");
-  	Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
-  	System.out.println("P2");
-      while (phones.moveToNext())
-      {
-      	String contact_name=phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-      	String contact_phone_number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-      	System.out.println("p3");
-      	System.out.println(contact_name);
-      	System.out.println(contact_phone_number);
-
-      	Contact this_contact=new Contact(contact_name, "dit Schilton", contact_phone_number);
-      	database.addContact(this_contact);
-
-      }
-      phones.close();    
-  }
   
 
 @Override

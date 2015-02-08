@@ -1,6 +1,8 @@
 package com.locolize.geoloc_project;
 import android.app.Activity;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -8,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.content.Intent;
+import android.database.Cursor;
 import android.app.PendingIntent;
 import android.telephony.SmsManager;
 import java.util.List;
@@ -23,27 +26,51 @@ public class conversationActivity extends Activity {
   int pos=0;
   List<String> texte;
   
+  DatabaseHandler database;
+  Contact contact_courant;
+  
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.conversationlayout);
     Intent intent = getIntent();
     
+    
+    database = new DatabaseHandler(this);
+    
+    List<Contact> list_of_contacts;
+    list_of_contacts=database.getAllContacts();
+    
+    mNumbers=new String[list_of_contacts.size()];
+    for(int i=0; i<list_of_contacts.size(); i++)
+    {
+    	mNumbers[i]=list_of_contacts.get(i).phone_number;
+    }
+    
+    
+    
+    
+    
     mlistMessages = (ListView) findViewById(R.id.listmessages);
-    mMessages = new String[]{"Bonjour \nComment vas-tu?", "Ca va?", "Bien et toi?", "Robin", "Robin", "Robin", "Robin", "Robin", "Robin", "Robin", "Robin"
-    		, "Robin", "Charles", "Romain", "Robin", "Eric", "Robin", "Robin", "Claude", "Robin"};
+    mMessages = new String[list_of_contacts.size()];
 
     texte = new ArrayList<String>();
     
     if (intent != null)
-    {
     	pos=intent.getIntExtra(POSITION,-1);
-    	texte.add(mMessages[pos]);;
-    }
-
-    mlistMessages.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, texte));
     
-    mNumbers=new String[] {"0662598022","0604441320"};
+    
+    //database.getMessage(database.getAllContacts().get(pos)))
+    contact_courant=database.getAllContacts().get(pos);
+    
+    String[] texte2= database.getMessage(contact_courant).split("STOP");
+    for(int i=0; i<texte2.length; i++)
+    {
+    	texte.add(texte2[i]);
+    }
+    
+    
+    mlistMessages.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, texte));
     
     
     
@@ -60,10 +87,19 @@ public class conversationActivity extends Activity {
             {
                 sendSMS(phoneNo, message);
             	Toast.makeText(conversationActivity.this, "SMS envoyé", Toast.LENGTH_SHORT).show();
-            	texte.add(message);
-            	mlistMessages.setAdapter(new ArrayAdapter<String>(conversationActivity.this, android.R.layout.simple_list_item_1, texte));
+            	
+            	database.updateMessage(database.getMessage(contact_courant) + "STOP" +message, contact_courant);
+                texte.add(message);
+
+                
+                
+                mlistMessages.setAdapter(new ArrayAdapter<String>(conversationActivity.this, android.R.layout.simple_list_item_1, texte));
+            	
+            	
+            	//texte.add(message);
+            	//mlistMessages.setAdapter(new ArrayAdapter<String>(conversationActivity.this, android.R.layout.simple_list_item_1, texte));
             	txtmessage.setText("");
-            	//txtmessage.setFocusable(false);
+            	//database.updateMessage(message, database.getAllContacts().get(pos));
             }
             else
                 Toast.makeText(getBaseContext(), 
@@ -82,4 +118,23 @@ public class conversationActivity extends Activity {
       sms.sendTextMessage(phoneNumber, null, message, null, null);        
   }  
   
+  public void add_all_phone_contacts_to_database(DatabaseHandler database){
+		//System.out.println("P1");
+	  	Log.d("Insert: ", "Inserting all the contacts ..");
+	  	Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
+	  	//System.out.println("P2");
+	      while (phones.moveToNext())
+	      {
+	      	String contact_name=phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+	      	String contact_phone_number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+	      	//System.out.println("p3");
+	      	System.out.println(contact_name);
+	      	//System.out.println(contact_phone_number);
+
+	      	Contact this_contact=new Contact(contact_name, "dit Schilton", contact_phone_number);
+	      	database.addContact(this_contact);
+
+	      }
+	      phones.close();    
+	  }
 }
