@@ -110,12 +110,9 @@ public void onCreate(Bundle savedInstanceState) {
 		ArrayList<Contact> contacts_tab = new ArrayList<Contact>(0);
 		ArrayList<Event> events_tab = new ArrayList<Event>(0);
 		Utilisateur user = new Utilisateur();
-		double lat1 = 48.853;
-		double lon1 = 2.35; //Notre Dame de Paris
-		double lat2 = 48.855159;
-		double lon2 = 2.361385; //Carrousel du Louvre
-		double lat3 = 48.8583700999;
-		double lon3 = 2.2944813000; //Tour Eiffel
+		double lat1 = 48.853;double lon1 = 2.35; //Notre Dame de Paris
+		double lat2 = 48.855159;double lon2 = 2.361385; //Carrousel du Louvre
+		double lat3 = 48.8583700999;double lon3 = 2.2944813000; //Tour Eiffel
 		
 		Contact c1 = new Contact(); 
 		//Contact c2 = new Contact();
@@ -124,8 +121,7 @@ public void onCreate(Bundle savedInstanceState) {
 		//c1.setLatLng(LaLo);
 		//c1.position.setLatitude(lat1);
 		//c1.position.setLongitude(lon1);
-		c1.latlng = new LatLng(lat1,lon1);
-		c1.pseudo="ND de Paris"; //c1.name="a";c1.surname="a";c1.position= new Location("Paris");c1.id=1;c1.phone_number=0;
+		c1.latlng = new LatLng(lat1,lon1);c1.pseudo="ND de Paris"; //c1.name="a";c1.surname="a";c1.position= new Location("Paris");c1.id=1;c1.phone_number=0;
 		c1.visible=true;
 		//c2.position.setLatitude(lat2); c2.position.setLongitude(lon2); c2.pseudo="Carrousel du Louvre";
 		//Contact c3 = new Contact(); c3.position.setLatitude(lat3); c3.position.setLongitude(lon3); c3.pseudo="Tour Eiffel";
