@@ -1,3 +1,5 @@
+
+
 package com.locolize.geoloc_project;
 
 import java.io.BufferedReader;
@@ -46,6 +48,7 @@ public class ActivitePrincipale extends Activity implements LocationListener{
 	private GoogleMap theMap;
 	private LocationManager locMan;
 	private Marker userMarker;
+	private Marker contactMarker;
 	//points d'interet :
 	private Marker[] placeMarkers;
 	//nombre maximal de lieux retournes
@@ -54,13 +57,19 @@ public class ActivitePrincipale extends Activity implements LocationListener{
 	private MarkerOptions options = new MarkerOptions();
 	Marker marqueur_rdv_courant;
 	private boolean addMarker = false;
-	public Utilisateur user;
+	public Utilisateur user=new Utilisateur();
+	public boolean camCentering = true;
+	public float defaultZoom = 15f;
 	
 @Override
 public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    
 	    setContentView(R.layout.activity_activite_principale);
+	    
+	    
+	    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	    user.client_id = 21;
 	    
 	    userIcon = R.drawable.yellow_point;
 		foodIcon = R.drawable.red_point;
@@ -70,7 +79,7 @@ public void onCreate(Bundle savedInstanceState) {
 		friendIcon = R.drawable.purple_point;
 		
 		
-		//add_all_phone_contacts_to_database();
+		//user.add_all_phone_contacts_to_database();
 		
 		/*
 		DatabaseHandler database = new DatabaseHandler(this);
@@ -107,9 +116,27 @@ public void onCreate(Bundle savedInstanceState) {
 		System.out.println("apr�s getmessage");
 		System.out.println(message_to_print);
 		//contacts = database.getAllContacts();*/
+		
+		/*
+		DatabaseHandler database = new DatabaseHandler(this);
+	    
+	    if (database.getAllContacts().size() == 0 )
+	    	add_all_phone_contacts_to_database(database);
+	    
+	    List<Contact> list_of_contacts;
+	    list_of_contacts=database.getAllContacts();
+	    
+	    mContacts=new String[list_of_contacts.size()];
+	    for(int i=0; i<list_of_contacts.size(); i++)
+	    {
+	    	mContacts[i]=list_of_contacts.get(i).name;
+	    }*/
+		
+		
+		
 		ArrayList<Contact> contacts_tab = new ArrayList<Contact>(0);
 		ArrayList<Event> events_tab = new ArrayList<Event>(0);
-		Utilisateur user = new Utilisateur();
+		//final Utilisateur user = new Utilisateur();
 		double lat1 = 48.853;double lon1 = 2.35; //Notre Dame de Paris
 		double lat2 = 48.855159;double lon2 = 2.361385; //Carrousel du Louvre
 		double lat3 = 48.8583700999;double lon3 = 2.2944813000; //Tour Eiffel
@@ -159,6 +186,8 @@ public void onCreate(Bundle savedInstanceState) {
 							//		.fromResource(R.drawable.))
 							;
 							marqueur_rdv_courant = theMap.addMarker(options);
+							Event evt = new Event();
+							user.close_events.add(evt);
 						}
 						else{
 							options.position(point);
@@ -175,45 +204,61 @@ public void onCreate(Bundle savedInstanceState) {
 						
 					}	
 				});
-				
-public boolean onMarkerClick(Marker arg0) {
+				theMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+					
+					@Override
+					public boolean onMarkerClick(Marker arg0) { // deux cas : si c'est un Event on ouvre l'activité partager avec : PartagerRDV.class
+						//et si c'est un contact on ouvre la conversation
+						int evtORctct=2; // 0 si c'est un event 1 si c'est un contact, 2 sinon (soi-même)
 						// TODO Auto-generated method stub
 						//On affiche une bulle dans la même fenetre qui contient un ou plusieurs boutons
-						//
-						//if arg0.getPosition();
 						Toast.makeText(getApplicationContext(), 
 								String.valueOf(arg0.getPosition().latitude), Toast.LENGTH_LONG).show();
+						
 						for(Contact contact : user.close_contacts){
 							if(arg0.getPosition()==contact.latlng){
 								//Contact currContact = new Contact();
-								CURRENT_CONTACT = contact;
+								//CURRENT_CONTACT = contact;
+								evtORctct = 1;
 								break;
 							}
+							else {for(Event event : user.close_events){
+								if(arg0.getPosition()==event.latlng){
+									//Event currEvent = new Event();
+									//CURRENT_EVENT = event;
+									evtORctct = 0;
+									break;
+							}
 						}
-						
+							}
 						 try {
-							 Thread.sleep(3000);
-								
+							 Thread.sleep(3000);		
 							  } catch (Exception e) {
 							    System.out.println("Le thread s'est arrêté avant !");
 							  }
-						Intent intent4 = new Intent(ActivitePrincipale.this, conversationActivity.class);
+						 Intent intent4 = new Intent();
+						 if(evtORctct==0){
+						intent4 = new Intent(ActivitePrincipale.this, PartageRDV.class);}
+						 else if(evtORctct==1){
+							 intent4 = new Intent(ActivitePrincipale.this, conversationActivity.class);
+						 }
+						 //IL FAUT CHANGER L ACTIVITE OUVERTE ICI PUIS DECOMMENTER startActivity
+						 
 			        	  final String POSITION="position";
 			        	//intent4.putExtra(CURRENT_CONTACT, "Contact courant");
 			        	  //intent4.putExtra("CURRENT_CONTACT", value);
 			        	  
-				  		startActivity(intent4);
-						
+			        	  if(evtORctct==2){
+			        		  return true;
+			        	  }
+			        	  else if(evtORctct==0 || evtORctct==1){
+				  		startActivity(intent4);}
+						}
 						return false;
-						
-					}
-				});
-				
-				
-				
+						}
+				});			
 				
 				  
-				
 
 				user.printContacts(theMap);
 				
@@ -224,6 +269,8 @@ public boolean onMarkerClick(Marker arg0) {
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					Log.e("Rien ne va plus","c'est la dèche");
+					Log.e(ACTIVITY_SERVICE, "essaye encore");
 				}
 			}
 		}
@@ -307,6 +354,7 @@ public boolean onMarkerClick(Marker arg0) {
                          "Veuillez cliquer sur la carte pour ajouter le marqueur", Toast.LENGTH_LONG).show();
 	    	}
 	    });
+	   
 	    
 	    
 	   
@@ -358,9 +406,21 @@ private void updatePlaces() throws Exception{
 	.title("You are here")
 	.icon(BitmapDescriptorFactory.fromResource(userIcon))
 	.snippet("Your last recorded location"));
-	//deplacement vers la position actuelle de l'utilisateur
-	theMap.animateCamera(CameraUpdateFactory.newLatLng(lastLatLng), 3000, null);
 	
+	user.update_close_contact_list();
+	for(Contact contact : user.close_contacts){
+		/*contactMarker = */theMap.addMarker(new MarkerOptions()
+		.position(contact.latlng)
+		.title(contact.name)
+		.icon(BitmapDescriptorFactory.fromResource(friendIcon))
+		.snippet(contact.surname + " A.K.A " + contact.pseudo));;
+	}
+	
+	//deplacement vers la position actuelle de l'utilisateur
+	if(camCentering==true){			//on ne zoom automatiquement que lorsque l'utilisateur ouvre l'appli
+		theMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng,defaultZoom), 3000, null);
+		camCentering=false;
+		}
 	//construction des strings des requetes de POI
 	String placesSearchStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
 			"json?location="+lat+","+lng+
@@ -369,7 +429,7 @@ private void updatePlaces() throws Exception{
 			"&key=AIzaSyDlg-eY0KiMruBtVXRcpiZRkD4qpmrn5C8";
 	
 	//execution de la requete
-	new GetPlaces().execute(placesSearchStr);
+	//new GetPlaces().execute(placesSearchStr);
 	
 	locMan.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 100, this);
 }
@@ -504,11 +564,9 @@ private class GetPlaces extends AsyncTask<String, Void, String> {
 				if(places[p]!=null)
 					placeMarkers[p]=theMap.addMarker(places[p]);
 			}
-		}
-		
+		}		
 	}
 }
-
 @Override
 protected void onResume() {
 	super.onResume();
@@ -516,7 +574,6 @@ protected void onResume() {
 		locMan.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 100, this);
 	}
 }
-
 @Override
 protected void onPause() {
 	super.onPause();
@@ -524,5 +581,4 @@ protected void onPause() {
 		locMan.removeUpdates(this);
 	}
 }
-
 }
