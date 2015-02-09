@@ -22,7 +22,7 @@ class bddUtilisateur:
             return 'nouveauClientOk'+'\n'+str(clientId)
         except:
             reponse = self.identite(telephone)
-            return reponse+'\n'+nom+'\n'+prenom
+            return reponse
 
     def identite(self,telephone):
         query="SELECT id from repertoire_final WHERE telephone = "+str(telephone)

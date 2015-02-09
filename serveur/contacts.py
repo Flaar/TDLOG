@@ -60,16 +60,12 @@ class bddContacts:
             self.curseur.execute(query)
             ancienContactsIds=self.curseur.fetchone()[0]
             ancienContactsIds=set(split(ancienContactsIds))
-            print(nouveauxContactsIds)
-            print(ancienContactsIds)
             contactsIds=ancienContactsIds.union(set(nouveauxContactsIds))
-            print(contactsIds)
             contactsIdstexte=concatene(contactsIds)
-            print(contactsIdstexte)
             query="UPDATE repertoire_final SET contactsIds = '"+contactsIdstexte+"' WHERE id="+str(clientId)
             self.curseur.execute(query)
             self.connexion.commit()
-        reponse='actualiseListeOk\n'
+        reponse='actualiseListeOk'
         #affichage de la liste des contacts, nom, prenom
         query="SELECT contactsIds FROM repertoire_final WHERE id="+str(clientId)
         self.curseur.execute(query)
@@ -79,7 +75,7 @@ class bddContacts:
             query="SELECT nom, prenom, telephone FROM repertoire_final WHERE id="+str(contactsIds[compteur])
             self.curseur.execute(query)
             contact=self.curseur.fetchone()
-            reponse=reponse+str(contactsIds[compteur])+'\n'+contact[0]+'\n'+contact[1]+'\n'+contact[2]
+            reponse=reponse+'\n'+str(contactsIds[compteur])+'\n'+contact[0]+'\n'+contact[1]+'\n'+contact[2]
         self.connexion.commit()
         self.connexion.close()
         return reponse
@@ -106,13 +102,13 @@ class bddContacts:
                 contactsPositionsX.append(positionX)
                 contactsPositionsY.append(positionY)
                 contactsProchesIds.append(contactId)
-        reponse='positionContactsOk\n'
+        reponse='positionContactsOk'
         #affichage de la liste de contacts, nom, prenom
         for compteur in range(len(contactsProchesIds)):
             query="SELECT nom, prenom, telephone FROM repertoire_final WHERE id="+str(contactsProchesIds[compteur])
             self.curseur.execute(query)
             contact=self.curseur.fetchone()
-            reponse=reponse+str(contactsProchesIds[compteur])+'\n'+str(contact[0])+'\n'+str(contact[1])+'\n'+str(contact[2])+'\n'+str(contactsPositionsX[compteur])+'\n'+str(contactsPositionsY[compteur])
+            reponse=reponse+'\n'+str(contactsProchesIds[compteur])+'\n'+str(contact[0])+'\n'+str(contact[1])+'\n'+str(contact[2])+'\n'+str(contactsPositionsX[compteur])+'\n'+str(contactsPositionsY[compteur])
         self.connexion.close()
         return reponse
 

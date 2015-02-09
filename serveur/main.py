@@ -11,7 +11,7 @@ import contacts
 import utilisateur
 
 HOST = '' #représente toutes les interfaces réseau
-PORT = 6767
+PORT = 7777
 #Port non prviligié à choisir
 
 #Classe gérant les requètes reçues sous forme de fichiers. Ces fichiers seront au format XML ou JSON selon le choix retenu plus tard et seront traités
@@ -26,6 +26,7 @@ class traitementRequete(socketserver.StreamRequestHandler):
         clientId=int(self.rfile.readline().strip())
         print(clientId)
         requeteId=self.rfile.readline().strip().decode('utf_8')
+        print(requeteId)
 
 #requètes sur le client
 
