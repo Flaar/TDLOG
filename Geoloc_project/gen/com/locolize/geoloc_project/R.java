@@ -2089,7 +2089,7 @@ containing a value of this type.
         public static final int Contacts=0x7f0c0055;
         public static final int CreerCompte=0x7f0c0057;
         public static final int Options=0x7f0c0056;
-        public static final int Send_button=0x7f0c0060;
+        public static final int Send_button=0x7f0c0061;
         public static final int action_bar=0x7f0c0046;
         public static final int action_bar_activity_content=0x7f0c0003;
         public static final int action_bar_container=0x7f0c0045;
@@ -2159,7 +2159,7 @@ containing a value of this type.
         public static final int never=0x7f0c002b;
         public static final int none=0x7f0c000b;
         public static final int normal=0x7f0c000d;
-        public static final int nouveau_message=0x7f0c0061;
+        public static final int nouveau_message=0x7f0c0060;
         public static final int ok=0x7f0c006a;
         public static final int phone_number=0x7f0c0065;
         public static final int production=0x7f0c0012;

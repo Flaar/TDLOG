@@ -52,6 +52,7 @@ public class conversationActivity extends Activity {
     
     
     mlistMessages = (ListView) findViewById(R.id.listmessages);
+    mlistMessages.setStackFromBottom(true);
     mMessages = new String[list_of_contacts.size()];
 
     texte = new ArrayList<String>();
@@ -88,7 +89,7 @@ public class conversationActivity extends Activity {
                 sendSMS(phoneNo, message);
             	Toast.makeText(conversationActivity.this, "SMS envoyé", Toast.LENGTH_SHORT).show();
             	
-            	database.updateMessage(database.getMessage(contact_courant) + "STOP" +message, contact_courant);
+            	database.updateMessage( database.getMessage(contact_courant) + "STOP" +"Message envoyé : \n" +message, contact_courant);
                 texte.add(message);
 
                 
@@ -118,23 +119,4 @@ public class conversationActivity extends Activity {
       sms.sendTextMessage(phoneNumber, null, message, null, null);        
   }  
   
-  public void add_all_phone_contacts_to_database(DatabaseHandler database){
-		//System.out.println("P1");
-	  	Log.d("Insert: ", "Inserting all the contacts ..");
-	  	Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
-	  	//System.out.println("P2");
-	      while (phones.moveToNext())
-	      {
-	      	String contact_name=phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-	      	String contact_phone_number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-	      	//System.out.println("p3");
-	      	System.out.println(contact_name);
-	      	//System.out.println(contact_phone_number);
-
-	      	Contact this_contact=new Contact(contact_name, "dit Schilton", contact_phone_number);
-	      	database.addContact(this_contact);
-
-	      }
-	      phones.close();    
-	  }
 }

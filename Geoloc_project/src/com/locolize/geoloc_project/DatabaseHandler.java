@@ -139,26 +139,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     
     public int updateMessage (String text,Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
-        System.out.println("after writable");
+        //System.out.println("after writable");
         ContentValues values = new ContentValues();
-        System.out.println("after values");
+        //System.out.println("after values");
         values.put(KEY_MESSAGE, text);
-        System.out.println("after put");
-        System.out.println(String.valueOf(contact.id));
+        //System.out.println("after put");
+        //System.out.println(String.valueOf(contact.id));
         // updating row
         return db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",new String[] { String.valueOf(contact.id)});        
     }
     
     String getMessage(Contact contact) {
         SQLiteDatabase db = this.getReadableDatabase();
-        System.out.println("after writable");
-        System.out.println(contact.id);
+        //System.out.println("after writable");
+        //System.out.println(contact.id);
         Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_ID, KEY_NAME, KEY_SURNAME, KEY_PH_NO, KEY_MESSAGE }, KEY_ID + "=?", new String[] { String.valueOf(contact.id) }, null, null, null, null);// rajouter 2 null ?? parce que j'ai ajout� surname et message ??
-        System.out.println("before cursor");
+       // System.out.println("before cursor");
         if (cursor != null)
             cursor.moveToFirst();
-        System.out.println("after cursor");
-        System.out.println(cursor.getString(4));
+        //System.out.println("after cursor");
+        //System.out.println(cursor.getString(4));
         String conversation = cursor.getString(4);
         // return contact
         return conversation;
