@@ -1,5 +1,3 @@
-
-
 package com.locolize.geoloc_project;
 
 import java.io.BufferedReader;
@@ -57,9 +55,12 @@ public class ActivitePrincipale extends Activity implements LocationListener{
 	private MarkerOptions options = new MarkerOptions();
 	Marker marqueur_rdv_courant;
 	private boolean addMarker = false;
-	public Utilisateur user=new Utilisateur();
+	private boolean update = true;
+	public Utilisateur user=new Utilisateur(21);
 	public boolean camCentering = true;
-	public float defaultZoom = 15f;
+	public float defaultZoom = 13f;
+	double lat1 = 48.854;double lon1 = 2.34; 
+	
 	
 @Override
 public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,17 @@ public void onCreate(Bundle savedInstanceState) {
 		shopIcon = R.drawable.green_point;
 		otherIcon = R.drawable.purple_point;
 		friendIcon = R.drawable.purple_point;
+		
+		
+		//Utilisateur user=new Utilisateur(21);
+  		//user.test_requete(); // marche
+  		try {
+			user.update_close_contact_list();
+			user.test_requete(); // marche
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 		//user.add_all_phone_contacts_to_database();
@@ -137,19 +149,43 @@ public void onCreate(Bundle savedInstanceState) {
 		ArrayList<Contact> contacts_tab = new ArrayList<Contact>(0);
 		ArrayList<Event> events_tab = new ArrayList<Event>(0);
 		//final Utilisateur user = new Utilisateur();
-		double lat1 = 48.853;double lon1 = 2.35; //Notre Dame de Paris
-		double lat2 = 48.855159;double lon2 = 2.361385; //Carrousel du Louvre
+		//double lat1 = 48.853;double lon1 = 2.35; //Notre Dame de Paris
+		
+		double lat2 = 48.855159;double lon2 = 2.361385;
+		//double lat2 = 48.855159;double lon2 = 2.361385; //Carrousel du Louvre
 		double lat3 = 48.8583700999;double lon3 = 2.2944813000; //Tour Eiffel
 		
-		Contact c1 = new Contact(); 
-		//Contact c2 = new Contact();
+		//Contact c1 = new Contact(); 
+		Contact c2 = new Contact();Contact c3 = new Contact();
+		Contact c4 = new Contact();
 		//user.close_contacts.add(c2);
 		//LatLng LaLo = new LatLng(lat1,lon1);
 		//c1.setLatLng(LaLo);
 		//c1.position.setLatitude(lat1);
 		//c1.position.setLongitude(lon1);
-		c1.latlng = new LatLng(lat1,lon1);c1.pseudo="ND de Paris"; //c1.name="a";c1.surname="a";c1.position= new Location("Paris");c1.id=1;c1.phone_number=0;
-		c1.visible=true;
+		//c1.latlng = new LatLng(lat1,lon1);c1.pseudo="ND de Paris"; //c1.name="a";c1.surname="a";c1.position= new Location("Paris");c1.id=1;c1.phone_number=0;
+		//c1.visible=true;
+		//LatLng latlng2 = new LatLng(48.8449846,2.603);
+		//LatLng latlng3 = new LatLng(48.8449847,2.605);
+		//LatLng latlng4 = new LatLng(48.8449850,2.59);
+		//LatLng latlng5 = new LatLng(48.8449849,2.61);
+		
+		
+		//2.6014776
+		
+		
+		
+		
+		
+		
+		
+		c2.latlng = new LatLng(lat1,lon1);c2.pseudo="ND de Paris"; //c1.name="a";c1.surname="a";c1.position= new Location("Paris");c1.id=1;c1.phone_number=0;
+		c2.visible=true;
+		c3.latlng = new LatLng(lat1,lon1);c3.pseudo="ND de Paris"; //c1.name="a";c1.surname="a";c1.position= new Location("Paris");c1.id=1;c1.phone_number=0;
+		c3.visible=true;
+		c4.latlng = new LatLng(lat1,lon1);c4.pseudo="ND de Paris"; //c1.name="a";c1.surname="a";c1.position= new Location("Paris");c1.id=1;c1.phone_number=0;
+		c4.visible=true;
+		
 		//c2.position.setLatitude(lat2); c2.position.setLongitude(lon2); c2.pseudo="Carrousel du Louvre";
 		//Contact c3 = new Contact(); c3.position.setLatitude(lat3); c3.position.setLongitude(lon3); c3.pseudo="Tour Eiffel";
 		
@@ -158,9 +194,15 @@ public void onCreate(Bundle savedInstanceState) {
 		
 		user.close_contacts = contacts_tab;
 		user.close_events = events_tab;
-		user.close_contacts.add(c1);
+		//user.close_contacts.add(c1);
 		//user.close_contacts.add(c2);
 		//user.close_contacts.add(c3);
+		//user.close_contacts.add(c4);
+		
+		
+		
+		
+		
 		
 		if(theMap==null){
 			//on "recupere" la carte
@@ -204,6 +246,7 @@ public void onCreate(Bundle savedInstanceState) {
 						
 					}	
 				});
+				
 				theMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 					
 					@Override
@@ -212,16 +255,31 @@ public void onCreate(Bundle savedInstanceState) {
 						int evtORctct=2; // 0 si c'est un event 1 si c'est un contact, 2 sinon (soi-même)
 						// TODO Auto-generated method stub
 						//On affiche une bulle dans la même fenetre qui contient un ou plusieurs boutons
+						//Toast.makeText(getApplicationContext(), 
+							//	String.valueOf(arg0.getPosition().latitude), Toast.LENGTH_LONG).show();
+						
+						
 						Toast.makeText(getApplicationContext(), 
-								String.valueOf(arg0.getPosition().latitude), Toast.LENGTH_LONG).show();
+								String.valueOf(arg0.getPosition().longitude), Toast.LENGTH_LONG).show();
+						
+						String CURRENT_STRING = new String();
 						
 						for(Contact contact : user.close_contacts){
-							if(arg0.getPosition()==contact.latlng){
-								//Contact currContact = new Contact();
+							
+							//Log.e("TEST","MARKEEEEEEEEEEEEEEEERRRR  TESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSST");
+							//if(arg0.getPosition()==contact.latlng){
+							//if(arg0.getPosition().longitude==contact.latlng.longitude && arg0.getPosition().latitude==contact.latlng.latitude){
+							if((arg0.getPosition().longitude-contact.latlng.longitude)<=0.1 && (arg0.getPosition().longitude-contact.latlng.longitude)>=-0.1){ //&& arg0.getPosition().latitude==contact.latlng.latitude){
+							//Contact currContact = new Contact();
 								//CURRENT_CONTACT = contact;
+								//Log.e("TEST","MARKEEEEEEEEEEEEEEEERRRR  TESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSST");
+								CURRENT_STRING = contact.name;
 								evtORctct = 1;
+								Toast.makeText(getApplicationContext(), 
+										CURRENT_STRING, Toast.LENGTH_LONG).show();
 								break;
 							}
+							
 							else {for(Event event : user.close_events){
 								if(arg0.getPosition()==event.latlng){
 									//Event currEvent = new Event();
@@ -231,6 +289,10 @@ public void onCreate(Bundle savedInstanceState) {
 							}
 						}
 							}
+							
+							Toast.makeText(getApplicationContext(), 
+									CURRENT_STRING, Toast.LENGTH_LONG).show();
+							
 						 try {
 							 Thread.sleep(3000);		
 							  } catch (Exception e) {
@@ -242,6 +304,8 @@ public void onCreate(Bundle savedInstanceState) {
 						 else if(evtORctct==1){
 							 intent4 = new Intent(ActivitePrincipale.this, conversationActivity.class);
 						 }
+						 
+						 intent4 = new Intent(ActivitePrincipale.this, conversationActivity.class);
 						 //IL FAUT CHANGER L ACTIVITE OUVERTE ICI PUIS DECOMMENTER startActivity
 						 
 			        	  final String POSITION="position";
@@ -258,8 +322,6 @@ public void onCreate(Bundle savedInstanceState) {
 						}
 				});			
 				
-				  
-
 				user.printContacts(theMap);
 				
 				//mise a jour de la position de l'utilisateur et des points d'interets obtenus
@@ -274,6 +336,7 @@ public void onCreate(Bundle savedInstanceState) {
 				}
 			}
 		}
+		
 		
 	    final Button contactsButton = (Button) findViewById(R.id.Contacts);
 	    final Button optionsButton = (Button) findViewById(R.id.Options);
@@ -354,10 +417,7 @@ public void onCreate(Bundle savedInstanceState) {
                          "Veuillez cliquer sur la carte pour ajouter le marqueur", Toast.LENGTH_LONG).show();
 	    	}
 	    });
-	   
-	    
-	    
-	   
+	      
 	}
   
 
@@ -387,6 +447,8 @@ public void onStatusChanged(String provider, int status, Bundle extras) {
 
 
 private void updatePlaces() throws Exception{
+	if(update==true)
+	{
 	//on obtient le gestionnaire de lieu "location manager"
 	locMan = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 	//obtention de la dernier position
@@ -406,14 +468,33 @@ private void updatePlaces() throws Exception{
 	.title("You are here")
 	.icon(BitmapDescriptorFactory.fromResource(userIcon))
 	.snippet("Your last recorded location"));
-	
+	try{
 	user.update_close_contact_list();
+
+	System.out.println(user.close_contacts.size());
+	Contact c = new Contact();
+	c.id=1;
+	//c.position.setLongitude(48.8);
+	c.latlng = new LatLng(48.841,2.58);c.pseudo="JACOUILLE"; //c1.name="a";c1.surname="a";c1.position= new Location("Paris");c1.id=1;c1.phone_number=0;
+	c.position= new Location("Paris");
+	user.close_contacts.add(c);
+	int i=0;
 	for(Contact contact : user.close_contacts){
-		/*contactMarker = */theMap.addMarker(new MarkerOptions()
+
+		System.out.println(i);
+		System.out.println(contact.surname);
+		Log.e("TEST", contact.name);
+		System.out.println(contact.latlng);
+		theMap.addMarker(new MarkerOptions()
 		.position(contact.latlng)
 		.title(contact.name)
 		.icon(BitmapDescriptorFactory.fromResource(friendIcon))
-		.snippet(contact.surname + " A.K.A " + contact.pseudo));;
+		.snippet(contact.name + " A.K.A " + contact.surname));
+		i=i+1;
+	}
+	}
+	catch(Exception e){
+		Log.e("TEST","TESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSST", e);
 	}
 	
 	//deplacement vers la position actuelle de l'utilisateur
@@ -429,10 +510,13 @@ private void updatePlaces() throws Exception{
 			"&key=AIzaSyDlg-eY0KiMruBtVXRcpiZRkD4qpmrn5C8";
 	
 	//execution de la requete
-	//new GetPlaces().execute(placesSearchStr);
+	new GetPlaces().execute(placesSearchStr);
 	
 	locMan.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 100, this);
-}
+
+	//update = false; //cette ligne permet de ne pas remettre à jour les affichages des amis et des positions.
+	}
+	}
 
 private class GetPlaces extends AsyncTask<String, Void, String> {
 	@Override
